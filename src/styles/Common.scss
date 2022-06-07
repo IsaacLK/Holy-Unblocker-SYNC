@@ -1,0 +1,5 @@
+@mixin screen_mobile {
+	@media only screen and (max-width: 650px) {
+		@content;
+	}
+}
