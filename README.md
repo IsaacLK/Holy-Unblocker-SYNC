@@ -1,4 +1,4 @@
-![HU Logo](https://github.com/[isaaclk]/[Holy-Unblocker-SYNC]/blob/[main]/gitstatic/icon.png?raw=true)
+![HU Logo](https://github.com/isaaclk/Holy-Unblocker-SYNC/blob/main/gitstatic/icon.png?raw=true)
 
 ## Holy Unblocker - Cloned to Github from git.holy.how
 # What is the purpose of this repository?
