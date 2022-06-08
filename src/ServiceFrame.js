@@ -1,9 +1,15 @@
 import './styles/Service.scss';
 
-import { ChevronLeft, Fullscreen, Public } from '@mui/icons-material';
+import {
+	ChevronLeft,
+	Fullscreen,
+	OpenInNew,
+	Public,
+} from '@mui/icons-material';
 import BareClient from 'bare-client';
 import {
 	forwardRef,
+	useCallback,
 	useEffect,
 	useImperativeHandle,
 	useMemo,
@@ -20,10 +26,10 @@ import resolve_proxy from './ProxyResolver.js';
 
 export default forwardRef(function ServiceFrame(props, ref) {
 	const iframe = useRef();
-	const proxy = useRef();
 	const [search, set_search] = useSearchParams();
 	const [first_load, set_first_load] = useState(false);
 	const [revoke_icon, set_revoke_icon] = useState(false);
+	const [last_src, set_last_src] = useState('');
 	const bare = useMemo(() => new BareClient(BARE_API), []);
 	const links_tried = useMemo(() => new WeakMap(), []);
 
@@ -48,7 +54,8 @@ export default forwardRef(function ServiceFrame(props, ref) {
 						props.layout.current.settings.proxy
 					);
 
-					iframe.current.contentWindow.location.replace(proxied_src);
+					iframe.current.contentWindow.location.href = proxied_src;
+					set_last_src(proxied_src);
 				} catch (error) {
 					console.error(error);
 					props.layout.current.notifications.current.add(
@@ -64,7 +71,8 @@ export default forwardRef(function ServiceFrame(props, ref) {
 			set_first_load(false);
 			set_title('');
 			set_icon('');
-			iframe.current.contentWindow.location.assign('about:blank');
+			iframe.current.contentWindow.location.href = 'about:blank';
+			set_last_src('about:blank');
 		}
 	}, [props.layout, src]);
 
@@ -94,12 +102,9 @@ export default forwardRef(function ServiceFrame(props, ref) {
 		};
 	}, [iframe]);
 
-	useEffect(() => {
-		let interval;
-
+	const test_proxy_update = useCallback(
 		async function test_proxy_update() {
 			if (!iframe.current) {
-				clearInterval(interval);
 				return;
 			}
 
@@ -109,11 +114,13 @@ export default forwardRef(function ServiceFrame(props, ref) {
 
 			// * didn't hook our call to new Function
 			try {
-				location = new contentWindow.Function('return location')();
+				set_last_src(contentWindow.location.href);
 			} catch (error) {
 				// possibly an x-frame error
 				return;
 			}
+
+			location = new contentWindow.Function('return location')();
 
 			let title;
 
@@ -154,12 +161,19 @@ export default forwardRef(function ServiceFrame(props, ref) {
 			}
 
 			set_title(title);
-		}
+		},
+		[bare, links_tried, src]
+	);
 
-		interval = setInterval(test_proxy_update, 100);
+	useEffect(() => {
+		let interval;
+
+		test_proxy_update();
+
+		interval = setInterval(test_proxy_update, 50);
 		test_proxy_update();
 		return () => clearInterval(interval);
-	}, [proxy, bare, src, iframe, links_tried]);
+	}, [test_proxy_update]);
 
 	useEffect(() => {
 		document.documentElement.dataset.service = Number(Boolean(src));
@@ -195,6 +209,9 @@ export default forwardRef(function ServiceFrame(props, ref) {
 					<Obfuscated ellipsis>{title}</Obfuscated>
 				</p>
 				<div className="shift-right"></div>
+				<a href={last_src} className="button">
+					<OpenInNew />
+				</a>
 				<Fullscreen
 					className="button"
 					onClick={() => iframe.current.requestFullscreen()}
@@ -206,6 +223,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 				ref={iframe}
 				data-first-load={Number(first_load)}
 				onLoad={() => {
+					console.log('loaded');
 					if (src !== '') {
 						set_first_load(true);
 					}
