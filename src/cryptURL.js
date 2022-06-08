@@ -5,7 +5,7 @@ import { decrypt as aes_decrypt, encrypt as aes_encrypt } from 'crypto-js/aes';
 import utf8 from 'crypto-js/enc-utf8';
 
 if (!('cryptURL key' in localStorage)) {
-	localStorage['cryptURL key'] = Math.random();
+	localStorage['cryptURL key'] = Math.random().toString(36).slice(2);
 }
 
 const key = localStorage['cryptURL key'];
