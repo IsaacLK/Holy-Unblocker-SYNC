@@ -141,9 +141,7 @@ export default function Player(props) {
 
 		focus_listener();
 
-		return () => {
-			window.removeEventListener('focus', focus_listener);
-		};
+		return () => window.removeEventListener('focus', focus_listener);
 	}, [data]);
 
 	if (error) {

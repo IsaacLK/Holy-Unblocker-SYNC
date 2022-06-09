@@ -194,39 +194,9 @@ main.theatre-player {
 	}
 
 	&.loading {
-		@keyframes shimmer {
-			0% {
-				background-position: -468px 0;
-			}
-
-			to {
-				background-position: 468px 0;
-			}
-		}
-
-		@keyframes shimmer-large {
-			0% {
-				background-position: -100vw 0;
-			}
-
-			to {
-				background-position: 100vw 0;
-			}
-		}
-
-		@keyframes shimmer-small {
-			0% {
-				background-position: -120px 0;
-			}
-
-			to {
-				background-position: 120px 0;
-			}
-		}
-
 		> .frame {
 			background-color: var(--background-accent-disabled);
-			animation: shimmer-large 1.7s linear 0s infinite normal forwards;
+			animation: shimmer-wide 1.7s linear 0s infinite normal forwards;
 			background-image: linear-gradient(
 				90deg,
 				hsla(0, 0%, 100%, 0),
@@ -240,7 +210,7 @@ main.theatre-player {
 		> .title {
 			> .name {
 				background-color: var(--background-accent-disabled);
-				animation: shimmer 1.7s linear 0s infinite normal forwards;
+				animation: shimmer-card 1.7s linear 0s infinite normal forwards;
 				background-image: linear-gradient(
 					90deg,
 					hsla(0, 0%, 100%, 0),

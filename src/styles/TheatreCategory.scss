@@ -44,16 +44,6 @@ main.theatre-category {
 		width: 150px;
 	}
 
-	@keyframes shimmer {
-		0% {
-			background-position: -468px 0;
-		}
-
-		to {
-			background-position: 468px 0;
-		}
-	}
-
 	> section {
 		> .name {
 			display: flex;
@@ -113,7 +103,7 @@ main.theatre-category {
 					position: relative;
 					border-radius: 8px;
 					background-color: var(--background-accent);
-					animation: shimmer 1.7s linear 0s infinite normal forwards;
+					animation: shimmer-card 1.7s linear 0s infinite normal forwards;
 					background-image: linear-gradient(
 						90deg,
 						hsla(0, 0%, 100%, 0),
@@ -180,7 +170,7 @@ main.theatre-category {
 					cursor: revert;
 
 					> .name {
-						animation: shimmer 1.7s linear 0s infinite normal forwards;
+						animation: shimmer-card 1.7s linear 0s infinite normal forwards;
 						background-image: linear-gradient(
 							90deg,
 							hsla(0, 0%, 100%, 0),

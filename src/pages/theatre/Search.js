@@ -151,11 +151,13 @@ export default function SearchBar(props) {
 								{
 									const entry = category_data.entries[last_select];
 
-									input.current.blur();
-									set_input_focused(false);
-									navigate(
-										`${resolveRoute('/theatre/', 'player')}?id=${entry.id}`
-									);
+									if (entry) {
+										input.current.blur();
+										set_input_focused(false);
+										navigate(
+											`${resolveRoute('/theatre/', 'player')}?id=${entry.id}`
+										);
+									}
 								}
 								break;
 							default:

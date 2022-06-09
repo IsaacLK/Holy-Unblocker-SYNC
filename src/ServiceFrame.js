@@ -223,7 +223,8 @@ export default forwardRef(function ServiceFrame(props, ref) {
 				ref={iframe}
 				data-first-load={Number(first_load)}
 				onLoad={() => {
-					console.log('loaded');
+					test_proxy_update();
+
 					if (src !== '') {
 						set_first_load(true);
 					}
