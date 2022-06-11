@@ -117,7 +117,7 @@ export default forwardRef(function Layout(props, ref) {
 
 	const ui_categories = [];
 
-	for (let id in categories) {
+	for (const id in categories) {
 		const { short, name } = categories[id];
 		ui_categories.push(
 			<Link

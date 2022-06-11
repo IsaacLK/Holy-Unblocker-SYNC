@@ -93,7 +93,7 @@ export function ItemList(props) {
 
 	const children = [];
 
-	for (let item of items) {
+	for (const item of items) {
 		if (item.loading) {
 			children.push(<LoadingItem key={item.id} id={item.id} />);
 		} else {

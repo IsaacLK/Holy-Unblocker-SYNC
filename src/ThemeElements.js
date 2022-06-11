@@ -98,7 +98,7 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 
 	let default_selected = 0;
 
-	for (let child of children) {
+	for (const child of children) {
 		if (child.type === 'option') {
 			const option = {
 				name: child.props.children,
@@ -161,8 +161,8 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 					case 'ArrowDown':
 					case 'ArrowUp':
 						{
-							let last_i = last_select;
-							let last_i_available = available_options.indexOf(
+							const last_i = last_select;
+							const last_i_available = available_options.indexOf(
 								[...available_options].sort(
 									(a, b) => Math.abs(a - last_i) - Math.abs(b - last_i)
 								)[0]

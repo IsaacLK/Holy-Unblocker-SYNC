@@ -33,7 +33,7 @@ function SearchBar(props) {
 
 	let engine;
 
-	for (let _engine of engines) {
+	for (const _engine of engines) {
 		if (_engine.format === format) {
 			engine = _engine;
 			break;
@@ -72,7 +72,7 @@ function SearchBar(props) {
 				if (outgoing.ok) {
 					const text = await outgoing.text();
 
-					for (let [, phrase] of text.matchAll(
+					for (const [, phrase] of text.matchAll(
 						/<span class="sa_tm_text">(.*?)<\/span>/g
 					)) {
 						entries.push(phrase);
@@ -201,7 +201,7 @@ function SearchBar(props) {
 								case 'ArrowDown':
 								case 'ArrowUp':
 									{
-										let last_i = last_select;
+										const last_i = last_select;
 
 										let next;
 

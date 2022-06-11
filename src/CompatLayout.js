@@ -44,7 +44,7 @@ function create_promise_external() {
 }
 
 export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
-	let [promise, promise_external] = useMemo(create_promise_external, []);
+	const [promise, promise_external] = useMemo(create_promise_external, []);
 
 	useImperativeHandle(ref, () => ({
 		promise,
@@ -55,7 +55,7 @@ export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
 		const scripts = [];
 
 		void (async function () {
-			for (let child of props.children) {
+			for (const child of props.children) {
 				if (child.type !== Script) {
 					continue;
 				}
@@ -76,7 +76,7 @@ export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
 
 		return () => {
 			abort.abort();
-			for (let script of scripts) {
+			for (const script of scripts) {
 				script.remove();
 			}
 		};
@@ -86,7 +86,7 @@ export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
 });
 
 export const Script = forwardRef(function Script(props, ref) {
-	let [promise, promise_external] = useMemo(create_promise_external, []);
+	const [promise, promise_external] = useMemo(create_promise_external, []);
 
 	useImperativeHandle(ref, () => ({
 		promise,

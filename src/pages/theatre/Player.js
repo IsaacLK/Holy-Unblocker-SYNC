@@ -180,10 +180,10 @@ export default function Player(props) {
 
 	const controls = [];
 
-	for (let control of data.controls) {
+	for (const control of data.controls) {
 		const visuals = [];
 
-		for (let key of control.keys) {
+		for (const key of control.keys) {
 			switch (key) {
 				case 'arrows':
 					visuals.push(

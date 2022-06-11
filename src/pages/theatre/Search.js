@@ -122,7 +122,7 @@ export default function SearchBar(props) {
 							case 'ArrowDown':
 							case 'ArrowUp':
 								{
-									let last_i = last_select;
+									const last_i = last_select;
 
 									let next;
 

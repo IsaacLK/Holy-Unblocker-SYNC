@@ -110,8 +110,6 @@ export default forwardRef(function ServiceFrame(props, ref) {
 
 			const { contentWindow } = iframe.current;
 
-			let location;
-
 			// * didn't hook our call to new Function
 			try {
 				set_last_src(contentWindow.location.href);
@@ -120,7 +118,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 				return;
 			}
 
-			location = new contentWindow.Function('return location')();
+			const location = new contentWindow.Function('return location')();
 
 			let title;
 
@@ -166,11 +164,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 	);
 
 	useEffect(() => {
-		let interval;
-
-		test_proxy_update();
-
-		interval = setInterval(test_proxy_update, 50);
+		const interval = setInterval(test_proxy_update, 50);
 		test_proxy_update();
 		return () => clearInterval(interval);
 	}, [test_proxy_update]);

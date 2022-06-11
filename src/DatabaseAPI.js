@@ -16,7 +16,7 @@ export default class DatabaseAPI {
 	sort_params(params) {
 		const result = {};
 
-		for (let param in params) {
+		for (const param in params) {
 			switch (typeof params[param]) {
 				case 'undefined':
 				case 'object':

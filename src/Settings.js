@@ -29,7 +29,7 @@ export default class Settings {
 
 		let updated = false;
 
-		for (let key in this.default_settings) {
+		for (const key in this.default_settings) {
 			if (this.valid_value(key, parsed[key])) {
 				settings[key] = parsed[key];
 			} else {
@@ -53,7 +53,7 @@ export default class Settings {
 	set_object(object) {
 		let updated = false;
 
-		for (let key in object) {
+		for (const key in object) {
 			if (this.valid_value(key, object[key])) {
 				this.value[key] = object[key];
 				updated = true;

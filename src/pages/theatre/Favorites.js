@@ -23,7 +23,7 @@ export default function Favorites(props) {
 			const api = new TheatreAPI(DB_API, abort.signal);
 			const data = [];
 
-			for (let id of props.layout.current.settings.favorites) {
+			for (const id of props.layout.current.settings.favorites) {
 				try {
 					data.push(await api.show(id));
 				} catch (error) {
