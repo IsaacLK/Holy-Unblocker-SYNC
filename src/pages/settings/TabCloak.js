@@ -1,11 +1,10 @@
+import { Notification } from '../../Notifications.js';
+import { ThemeButton, ThemeInputBar } from '../../ThemeElements.js';
+import { BARE_API } from '../../consts.js';
+import { Obfuscated } from '../../obfuscate.js';
 import { Check } from '@mui/icons-material';
 import BareClient from 'bare-client';
 import { useRef } from 'react';
-
-import { BARE_API } from '../../consts.js';
-import { Notification } from '../../Notifications.js';
-import { Obfuscated } from '../../obfuscate.js';
-import { ThemeButton, ThemeInputBar } from '../../ThemeElements.js';
 
 const bare = new BareClient(BARE_API);
 
@@ -150,7 +149,7 @@ export default function TabCloak(props) {
 					<Obfuscated>URL</Obfuscated>:
 				</span>
 				<form
-					onSubmit={event => {
+					onSubmit={(event) => {
 						event.preventDefault();
 						onSubmit();
 					}}

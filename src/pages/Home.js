@@ -1,7 +1,6 @@
 import '../styles/Home.scss';
-
-import { Obfuscated } from '../obfuscate.js';
 import { ThemeButton } from '../ThemeElements.js';
+import { Obfuscated } from '../obfuscate.js';
 
 export default function Home(props) {
 	return (

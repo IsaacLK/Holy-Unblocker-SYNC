@@ -1,11 +1,9 @@
 import './styles/ThemeElements.scss';
-
+import { ObfuscatedA } from './obfuscate.js';
 import { ExpandMore } from '@mui/icons-material';
 import clsx from 'clsx';
 import { forwardRef, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import { ObfuscatedA } from './obfuscate.js';
 
 export function ThemeButton(props) {
 	const { children, className, ...attributes } = props;
@@ -154,7 +152,7 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 			className={clsx('theme-select', className)}
 			data-open={Number(open)}
 			ref={container}
-			onKeyDown={event => {
+			onKeyDown={(event) => {
 				let prevent_default = true;
 
 				switch (event.code) {
@@ -223,7 +221,7 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 					event.preventDefault();
 				}
 			}}
-			onBlur={event => {
+			onBlur={(event) => {
 				if (!event.target.contains(event.relatedTarget)) {
 					set_open(false);
 				}

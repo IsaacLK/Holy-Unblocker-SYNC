@@ -203,7 +203,7 @@ export function ObfuscatedA(props) {
 		// eslint-disable-next-line jsx-a11y/anchor-is-valid
 		<span
 			{...attributes}
-			onMouseUp={event => {
+			onMouseUp={(event) => {
 				if (event.button === 1) {
 					if (typeof onMouseUp === 'function') {
 						onMouseUp(event);
@@ -214,7 +214,7 @@ export function ObfuscatedA(props) {
 					window.open(href, '_blank');
 				}
 			}}
-			onClick={event => {
+			onClick={(event) => {
 				if (typeof onClick === 'function') {
 					onClick(event);
 				}

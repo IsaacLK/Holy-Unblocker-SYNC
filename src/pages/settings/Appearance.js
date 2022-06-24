@@ -7,7 +7,7 @@ export default function Appearance(props) {
 				<span>Theme:</span>
 				<ThemeSelect
 					defaultValue={props.layout.current.settings.theme}
-					onChange={event => {
+					onChange={(event) => {
 						props.layout.current.set_settings({
 							...props.layout.current.settings,
 							theme: event.target.value,

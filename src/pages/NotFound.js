@@ -1,5 +1,5 @@
-import resolveRoute from '../resolveRoute.js';
 import { ThemeLink } from '../ThemeElements.js';
+import resolveRoute from '../resolveRoute.js';
 
 export default function NotFound(props) {
 	return (

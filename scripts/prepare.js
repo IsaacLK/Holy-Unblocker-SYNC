@@ -2,7 +2,7 @@
 
 try {
 	const husky = require('husky');
-	husky.prepare();
+	husky.install();
 } catch (error) {
 	console.warn('Husky not installed');
 }

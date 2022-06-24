@@ -1,18 +1,16 @@
 import '../../styles/TheatreCategory.scss';
-
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-
+import { useSettings } from '../../Settings.js';
+import { ItemList, TheatreAPI } from '../../TheatreCommon.js';
+import { ThemeSelect } from '../../ThemeElements.js';
 import { DB_API } from '../../consts.js';
 import isAbortError from '../../isAbortError.js';
 import { Obfuscated } from '../../obfuscate.js';
 import resolveRoute from '../../resolveRoute.js';
-import { useSettings } from '../../Settings.js';
-import { ItemList, TheatreAPI } from '../../TheatreCommon.js';
-import { ThemeSelect } from '../../ThemeElements.js';
 import SearchBar from './Search.js';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import clsx from 'clsx';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const LIMIT = 30;
 
@@ -120,7 +118,7 @@ export default function Category(props) {
 					Try again by clicking{' '}
 					<a
 						href="i:"
-						onClick={event => {
+						onClick={(event) => {
 							event.preventDefault();
 							global.location.reload();
 						}}
@@ -163,7 +161,7 @@ export default function Category(props) {
 						className="sort"
 						defaultValue={settings.sort}
 						style={{ width: 160, flex: 'none' }}
-						onChange={event => {
+						onChange={(event) => {
 							set_data(create_loading(last_total));
 							set_settings({
 								...settings,

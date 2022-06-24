@@ -1,3 +1,5 @@
+import NotificationsManager from './Notifications.js';
+import { useSettings } from './Settings.js';
 import {
 	forwardRef,
 	useEffect,
@@ -7,9 +9,6 @@ import {
 	useState,
 } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import NotificationsManager from './Notifications.js';
-import { useSettings } from './Settings.js';
 
 export const THEMES = ['night', 'day'];
 

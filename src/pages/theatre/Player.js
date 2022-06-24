@@ -1,5 +1,11 @@
 import '../../styles/TheatrePlayer.scss';
-
+import resolve_proxy from '../../ProxyResolver.js';
+import { TheatreAPI } from '../../TheatreCommon.js';
+import { DB_API, THEATRE_CDN } from '../../consts.js';
+import { encryptURL } from '../../cryptURL.js';
+import isAbortError from '../../isAbortError.js';
+import { Obfuscated } from '../../obfuscate.js';
+import resolveRoute from '../../resolveRoute.js';
 import {
 	ArrowDropDown,
 	ArrowDropUp,
@@ -14,14 +20,6 @@ import {
 	VideogameAsset,
 } from '@mui/icons-material';
 import { useEffect, useRef, useState } from 'react';
-
-import { DB_API, THEATRE_CDN } from '../../consts.js';
-import { encryptURL } from '../../cryptURL.js';
-import isAbortError from '../../isAbortError.js';
-import { Obfuscated } from '../../obfuscate.js';
-import resolve_proxy from '../../ProxyResolver.js';
-import resolveRoute from '../../resolveRoute.js';
-import { TheatreAPI } from '../../TheatreCommon.js';
 
 async function resolve_src(src, type, setting) {
 	switch (type) {
@@ -234,20 +232,25 @@ export default function Player(props) {
 					ref={iframe}
 					title="Embed"
 					onLoad={() => {
-						iframe.current.contentWindow.addEventListener('keydown', event => {
-							if (event.target === iframe.current.contentWindow.document.body) {
-								switch (event.code) {
-									case 'Space':
-									case 'ArrowUp':
-									case 'ArrowDown':
-									case 'ArrowLeft':
-									case 'ArrowRight':
-										event.preventDefault();
-										break;
-									// no default
+						iframe.current.contentWindow.addEventListener(
+							'keydown',
+							(event) => {
+								if (
+									event.target === iframe.current.contentWindow.document.body
+								) {
+									switch (event.code) {
+										case 'Space':
+										case 'ArrowUp':
+										case 'ArrowDown':
+										case 'ArrowLeft':
+										case 'ArrowRight':
+											event.preventDefault();
+											break;
+										// no default
+									}
 								}
 							}
-						});
+						);
 					}}
 					onClick={focus_listener}
 					onFocus={focus_listener}
@@ -257,7 +260,7 @@ export default function Player(props) {
 					tabIndex={0}
 					className="controls"
 					ref={controls_popup}
-					onBlur={event => {
+					onBlur={(event) => {
 						if (
 							!event.target.contains(event.relatedTarget) &&
 							!controls_open.current.contains(event.relatedTarget)
@@ -317,7 +320,7 @@ export default function Player(props) {
 							favorites,
 						});
 
-						set_favorited(true);
+						set_favorited(favorites.includes(props.id));
 					}}
 				>
 					{favorited ? <Star /> : <StarBorder />}

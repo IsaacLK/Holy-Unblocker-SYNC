@@ -1,16 +1,14 @@
 import '../../styles/TheatreCategory.scss';
-
-import { useEffect, useState } from 'react';
-
+import { ItemList, TheatreAPI } from '../../TheatreCommon.js';
 import { DB_API } from '../../consts.js';
 import { Obfuscated } from '../../obfuscate.js';
-import { ItemList, TheatreAPI } from '../../TheatreCommon.js';
+import { useEffect, useState } from 'react';
 
 const FETCH_FAILED = /TypeError: Failed to fetch/;
 
 export default function Favorites(props) {
 	const [data, set_data] = useState(() =>
-		props.layout.current.settings.favorites.map(id => ({
+		props.layout.current.settings.favorites.map((id) => ({
 			loading: true,
 			id,
 		}))

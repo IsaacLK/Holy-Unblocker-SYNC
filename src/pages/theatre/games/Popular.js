@@ -1,17 +1,15 @@
 import '../../../styles/TheatreCategory.scss';
-
-import { ArrowForward } from '@mui/icons-material';
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { ItemList, TheatreAPI } from '../../../TheatreCommon.js';
+import { ThemeLink } from '../../../ThemeElements.js';
 import { DB_API } from '../../../consts.js';
 import isAbortError from '../../../isAbortError.js';
 import { Obfuscated } from '../../../obfuscate.js';
 import resolveRoute from '../../../resolveRoute.js';
-import { ItemList, TheatreAPI } from '../../../TheatreCommon.js';
-import { ThemeLink } from '../../../ThemeElements.js';
 import SearchBar from '../Search.js';
 import categories from './categories.js';
+import { ArrowForward } from '@mui/icons-material';
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LIMIT = 8;
 const loading_categories = {
@@ -75,7 +73,7 @@ export default function Popular() {
 					Try again by clicking{' '}
 					<a
 						href="i:"
-						onClick={event => {
+						onClick={(event) => {
 							event.preventDefault();
 							global.location.reload();
 						}}

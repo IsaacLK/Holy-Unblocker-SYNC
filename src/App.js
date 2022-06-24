@@ -1,13 +1,11 @@
 import './styles/App.scss';
-
-import { Suspense, createRef, lazy } from 'react';
-import { Route, Routes, useSearchParams } from 'react-router-dom';
-
 import CompatLayout from './CompatLayout.js';
 import Layout from './Layout.js';
 import MainLayout from './MainLayout.js';
 import categories from './pages/theatre/games/categories.js';
 import resolveRoute from './resolveRoute.js';
+import { Suspense, createRef, lazy } from 'react';
+import { Route, Routes, useSearchParams } from 'react-router-dom';
 
 const GamesPopular = lazy(() =>
 	import(/* webpackPrefetch: true */ './pages/theatre/games/Popular.js')

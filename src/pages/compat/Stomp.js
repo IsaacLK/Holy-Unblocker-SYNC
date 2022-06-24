@@ -1,10 +1,8 @@
-import process from 'process';
-
-import { useEffect, useRef } from 'react';
-
 import { Script } from '../../CompatLayout.js';
 import { BARE_API } from '../../consts.js';
 import { Obfuscated } from '../../obfuscate.js';
+import process from 'process';
+import { useEffect, useRef } from 'react';
 
 export default function Rammerhead(props) {
 	const bootstrapper = useRef();

@@ -1,9 +1,8 @@
 import './styles/Footer.scss';
-
+import { ThemeLink } from './ThemeElements.js';
 import { ReactComponent as Waves } from './assets/waves.svg';
 import { Obfuscated } from './obfuscate.js';
 import resolveRoute from './resolveRoute.js';
-import { ThemeLink } from './ThemeElements.js';
 
 export default function Footer() {
 	return (

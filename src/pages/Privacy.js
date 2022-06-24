@@ -1,6 +1,6 @@
+import { ThemeLink } from '../ThemeElements.js';
 import { Obfuscated } from '../obfuscate.js';
 import resolveRoute from '../resolveRoute.js';
-import { ThemeLink } from '../ThemeElements.js';
 
 export default function Privacy(props) {
 	return (

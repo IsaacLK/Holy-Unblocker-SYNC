@@ -1,6 +1,5 @@
 // encrypting/decrypt parts of the URL
 // particularly proxy,compat
-
 import { decrypt as aes_decrypt, encrypt as aes_encrypt } from 'crypto-js/aes';
 import utf8 from 'crypto-js/enc-utf8';
 

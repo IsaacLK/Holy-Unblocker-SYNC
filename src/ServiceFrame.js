@@ -1,5 +1,9 @@
 import './styles/Service.scss';
-
+import { Notification } from './Notifications.js';
+import resolve_proxy from './ProxyResolver.js';
+import { BARE_API } from './consts.js';
+import { decryptURL, encryptURL } from './cryptURL.js';
+import { Obfuscated } from './obfuscate.js';
 import {
 	ChevronLeft,
 	Fullscreen,
@@ -17,12 +21,6 @@ import {
 	useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
-import { BARE_API } from './consts.js';
-import { decryptURL, encryptURL } from './cryptURL.js';
-import { Notification } from './Notifications.js';
-import { Obfuscated } from './obfuscate.js';
-import resolve_proxy from './ProxyResolver.js';
 
 export default forwardRef(function ServiceFrame(props, ref) {
 	const iframe = useRef();

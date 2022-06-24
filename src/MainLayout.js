@@ -1,8 +1,12 @@
 import './styles/Navigation.scss';
 import './styles/Footer.scss';
-
-import process from 'process';
-
+import Footer from './Footer.js';
+import { ReactComponent as HatBeta } from './assets/hat-beta.svg';
+import { ReactComponent as HatDev } from './assets/hat-dev.svg';
+import { ReactComponent as HatPlain } from './assets/hat.svg';
+import { ObfuscateLayout, Obfuscated, ObfuscatedA } from './obfuscate.js';
+import categories from './pages/theatre/games/categories.js';
+import resolveRoute from './resolveRoute.js';
 import {
 	Apps,
 	Home,
@@ -16,6 +20,7 @@ import {
 	StarRounded,
 	WebAsset,
 } from '@mui/icons-material';
+import process from 'process';
 import {
 	forwardRef,
 	useEffect,
@@ -24,14 +29,6 @@ import {
 	useState,
 } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-
-import { ReactComponent as HatBeta } from './assets/hat-beta.svg';
-import { ReactComponent as HatDev } from './assets/hat-dev.svg';
-import { ReactComponent as HatPlain } from './assets/hat.svg';
-import Footer from './Footer.js';
-import { ObfuscateLayout, Obfuscated, ObfuscatedA } from './obfuscate.js';
-import categories from './pages/theatre/games/categories.js';
-import resolveRoute from './resolveRoute.js';
 
 function Hat(props) {
 	const { children, ...attributes } = props;

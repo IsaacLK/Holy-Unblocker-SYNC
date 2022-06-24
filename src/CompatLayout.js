@@ -1,6 +1,9 @@
 import './styles/Compat.scss';
 import './styles/ThemeElements.scss';
-
+import { ThemeA, ThemeLink } from './ThemeElements.js';
+import { decryptURL } from './cryptURL.js';
+import { ObfuscateLayout, Obfuscated } from './obfuscate.js';
+import resolveRoute from './resolveRoute.js';
 import {
 	forwardRef,
 	useEffect,
@@ -9,11 +12,6 @@ import {
 	useState,
 } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-
-import { decryptURL } from './cryptURL.js';
-import { ObfuscateLayout, Obfuscated } from './obfuscate.js';
-import resolveRoute from './resolveRoute.js';
-import { ThemeA, ThemeLink } from './ThemeElements.js';
 
 function load_script(src) {
 	const script = document.createElement('script');
@@ -149,7 +147,7 @@ export default forwardRef(function CompatLayout(props, ref) {
 						Try again by clicking{' '}
 						<ThemeA
 							href="i:"
-							onClick={event => {
+							onClick={(event) => {
 								event.preventDefault();
 								global.location.reload();
 							}}

@@ -1,6 +1,6 @@
+import { ThemeSelect } from '../../ThemeElements.js';
 import engines from '../../engines.js';
 import { Obfuscated } from '../../obfuscate.js';
-import { ThemeSelect } from '../../ThemeElements.js';
 
 export default function Search(props) {
 	return (
@@ -10,7 +10,7 @@ export default function Search(props) {
 					<Obfuscated>Proxy</Obfuscated>:
 				</span>
 				<ThemeSelect
-					onChange={event =>
+					onChange={(event) =>
 						props.layout.current.set_settings({
 							...props.layout.current.settings,
 							proxy: event.target.value,
@@ -29,7 +29,7 @@ export default function Search(props) {
 					<Obfuscated>Search Engine</Obfuscated>:
 				</span>
 				<ThemeSelect
-					onChange={event =>
+					onChange={(event) =>
 						props.layout.current.set_settings({
 							...props.layout.current.settings,
 							search: event.target.value,

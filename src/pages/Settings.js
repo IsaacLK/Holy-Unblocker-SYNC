@@ -1,5 +1,6 @@
 import '../styles/Settings.scss';
-
+import { MenuTab } from '../MainLayout.js';
+import resolveRoute from '../resolveRoute.js';
 import {
 	Brush,
 	BrushOutlined,
@@ -8,9 +9,6 @@ import {
 	Public,
 } from '@mui/icons-material';
 import { Outlet } from 'react-router-dom';
-
-import { MenuTab } from '../MainLayout.js';
-import resolveRoute from '../resolveRoute.js';
 
 export default function Settings() {
 	return (

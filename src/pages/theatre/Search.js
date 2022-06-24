@@ -1,16 +1,14 @@
 import '../../styles/TheatreSearch.scss';
-
-import { Search } from '@mui/icons-material';
-import clsx from 'clsx';
-import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { TheatreAPI } from '../../TheatreCommon.js';
+import { ThemeInputBar } from '../../ThemeElements.js';
 import { DB_API } from '../../consts.js';
 import isAbortError from '../../isAbortError.js';
 import { Obfuscated } from '../../obfuscate.js';
 import resolveRoute from '../../resolveRoute.js';
-import { TheatreAPI } from '../../TheatreCommon.js';
-import { ThemeInputBar } from '../../ThemeElements.js';
+import { Search } from '@mui/icons-material';
+import clsx from 'clsx';
+import { useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LIMIT = 8;
 
@@ -89,7 +87,7 @@ export default function SearchBar(props) {
 			data-focused={Number(input_focused)}
 			data-suggested={Number(render_suggested)}
 			ref={bar}
-			onBlur={event => {
+			onBlur={(event) => {
 				if (!bar.current.contains(event.relatedTarget)) {
 					set_input_focused(false);
 				}
@@ -102,17 +100,17 @@ export default function SearchBar(props) {
 					type="text"
 					className="thin-pad-left"
 					placeholder={props.placeholder}
-					onFocus={event => {
+					onFocus={(event) => {
 						set_input_focused(true);
 						set_last_select(-1);
 						search(event.target.value);
 					}}
-					onClick={event => {
+					onClick={(event) => {
 						set_input_focused(true);
 						set_last_select(-1);
 						search(event.target.value);
 					}}
-					onKeyDown={event => {
+					onKeyDown={(event) => {
 						let prevent_default = true;
 
 						switch (event.code) {
@@ -170,7 +168,7 @@ export default function SearchBar(props) {
 							event.preventDefault();
 						}
 					}}
-					onChange={event => {
+					onChange={(event) => {
 						search(event.target.value);
 						set_last_select(-1);
 					}}

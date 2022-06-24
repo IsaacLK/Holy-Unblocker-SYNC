@@ -1,6 +1,6 @@
+import { ObfuscatedThemeA } from '../ThemeElements.js';
 import { HU_DISCORD_URL } from '../consts.js';
 import { Obfuscated } from '../obfuscate.js';
-import { ObfuscatedThemeA } from '../ThemeElements.js';
 
 export default function Contact(props) {
 	return (

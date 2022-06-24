@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import { THEATRE_CDN } from './consts.js';
 import DatabaseAPI from './DatabaseAPI.js';
+import { THEATRE_CDN } from './consts.js';
 import { Obfuscated } from './obfuscate.js';
 import resolveRoute from './resolveRoute.js';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  *

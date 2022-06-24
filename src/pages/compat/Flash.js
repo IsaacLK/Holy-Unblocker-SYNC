@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-
 import { Script } from '../../CompatLayout.js';
 import { Obfuscated } from '../../obfuscate.js';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Flash(props) {
 	const player = useRef();
@@ -26,7 +25,7 @@ export default function Flash(props) {
 					set_ruffle_loaded(true);
 				});
 
-				player.current.addEventListener('error', event => {
+				player.current.addEventListener('error', (event) => {
 					throw event.error;
 				});
 
