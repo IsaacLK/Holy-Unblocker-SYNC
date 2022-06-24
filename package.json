@@ -79,11 +79,6 @@
 	"lint-staged": {
 		"*.{mjs, js,json}": "prettier --write"
 	},
-	"importSort": {
-		".mjs, .js, .jsx, .ts, .tsx": {
-			"style": "module"
-		}
-	},
 	"scripts": {
 		"build-stomp": "node scripts/build-stomp.js",
 		"build-ultraviolet": "node scripts/build-ultraviolet.js",
