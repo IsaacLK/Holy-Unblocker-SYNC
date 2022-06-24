@@ -5,6 +5,7 @@ const { join } = require('path');
 const { promisify } = require('util');
 
 const webpack = require('webpack');
+const { appSrc } = require('../config/paths');
 
 const paths = require('../config/paths');
 
@@ -36,7 +37,7 @@ void (async function () {
 		}
 	}
 
-	for (let file of EXTRACT) {
+	for (const file of EXTRACT) {
 		try {
 			await copyFile(join(UV_CORE, file), join(UV_OUTPUT, file));
 		} catch (error) {
@@ -53,8 +54,8 @@ void (async function () {
 
 	console.log('Extracted scripts from Ultraviolet-Core');
 
-	for (let file of COPY) {
-		await copyFile(join(WEBROOT, '..', 'uv', file), join(UV_OUTPUT, file));
+	for (const file of COPY) {
+		await copyFile(join(appSrc, 'uv', file), join(UV_OUTPUT, file));
 	}
 
 	console.log('Copied local scripts');

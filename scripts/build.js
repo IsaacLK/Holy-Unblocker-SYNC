@@ -87,27 +87,27 @@ checkBrowsers(paths.appPath, isInteractive)
 
 		switch (process.env.REACT_APP_ROUTER) {
 			case 'id':
-				for (let dir_i in routes) {
-					const { dir, pages } = routes[dir_i];
-					const dir_name = dir === '/' ? '' : dir_i;
-					const dir_abs = path.join(paths.appBuild, dir_name);
+				for (const dirI in routes) {
+					const { dir, pages } = routes[dirI];
+					const dirName = dir === '/' ? '' : dirI;
+					const dirAbs = path.join(paths.appBuild, dirName);
 
 					try {
-						await fs.promises.mkdir(dir_abs);
+						await fs.promises.mkdir(dirAbs);
 					} catch (error) {
 						if (error.code !== 'EEXIST') {
 							throw error;
 						}
 					}
 
-					for (let page_i in pages) {
-						// const page = pages[page_i];
-						const page_name =
-							pages[page_i] === '' ? 'index.html' : `${page_i}.html`;
-						const page_abs = path.join(dir_abs, page_name);
+					for (const pageI in pages) {
+						// const page = pages[pageI];
+						const pageName =
+							pages[pageI] === '' ? 'index.html' : `${pageI}.html`;
+						const pageAbs = path.join(dirAbs, pageName);
 
 						try {
-							fs.promises.copyFile(appBuildHTML, page_abs);
+							fs.promises.copyFile(appBuildHTML, pageAbs);
 						} catch (error) {
 							if (error.code !== 'EEXIST') {
 								throw error;
@@ -118,24 +118,24 @@ checkBrowsers(paths.appPath, isInteractive)
 				break;
 			default:
 			case 'file':
-				for (let { dir, pages } of routes) {
-					const dir_name = dir;
-					const dir_abs = path.join(paths.appBuild, dir_name);
+				for (const { dir, pages } of routes) {
+					const dirName = dir;
+					const dirAbs = path.join(paths.appBuild, dirName);
 
 					try {
-						await fs.promises.mkdir(dir_abs);
+						await fs.promises.mkdir(dirAbs);
 					} catch (error) {
 						if (error.code !== 'EEXIST') {
 							throw error;
 						}
 					}
 
-					for (let page of pages) {
-						const page_name = page === '' ? 'index.html' : `${page}.html`;
-						const page_abs = path.join(dir_abs, page_name);
+					for (const page of pages) {
+						const pageName = page === '' ? 'index.html' : `${page}.html`;
+						const pageAbs = path.join(dirAbs, pageName);
 
 						try {
-							await fs.promises.copyFile(appBuildHTML, page_abs);
+							await fs.promises.copyFile(appBuildHTML, pageAbs);
 						} catch (error) {
 							if (error.code !== 'EEXIST') {
 								throw error;
