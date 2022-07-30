@@ -9,7 +9,7 @@ import { Obfuscated } from '../obfuscate.js';
 import resolveRoute from '../resolveRoute.js';
 import textContent from '../textContent.js';
 import { NorthWest, Search } from '@mui/icons-material';
-import BareClient from 'bare-client';
+import BareClient from '@tomphttp/bare-client';
 import clsx from 'clsx';
 import { createRef, useMemo, useRef, useState } from 'react';
 

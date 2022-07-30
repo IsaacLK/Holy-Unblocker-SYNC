@@ -10,7 +10,7 @@ import {
 	OpenInNew,
 	Public,
 } from '@mui/icons-material';
-import BareClient from 'bare-client';
+import BareClient from '@tomphttp/bare-client';
 import {
 	forwardRef,
 	useCallback,

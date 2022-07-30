@@ -3,7 +3,7 @@ import { ThemeButton, ThemeInputBar } from '../../ThemeElements.js';
 import { BARE_API } from '../../consts.js';
 import { Obfuscated } from '../../obfuscate.js';
 import { Check } from '@mui/icons-material';
-import BareClient from 'bare-client';
+import BareClient from '@tomphttp/bare-client';
 import { useRef } from 'react';
 
 const bare = new BareClient(BARE_API);
