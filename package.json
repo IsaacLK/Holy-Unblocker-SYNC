@@ -13,7 +13,7 @@
 		"@mui/icons-material": "^5.8.0",
 		"@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
 		"@svgr/webpack": "^6.2.1",
-		"@tomphttp/bare-client": "^1.0.3",
+		"@tomphttp/bare-client": "^1.0.4-build1",
 		"babel-loader": "^8.2.5",
 		"babel-plugin-named-asset-import": "^0.3.8",
 		"babel-preset-react-app": "^10.0.1",
