@@ -8,26 +8,26 @@ export default function Rammerhead(props) {
 	const bootstrapper = useRef();
 
 	useEffect(() => {
-		void (async function () {
-			let error_cause;
+		(async function () {
+			let errorCause;
 
 			try {
 				if (
 					process.env.NODE_ENV !== 'development' &&
 					global.location.protocol !== 'https:'
 				) {
-					error_cause = 'Stomp must be used under HTTPS.';
-					throw new Error(error_cause);
+					errorCause = 'Stomp must be used under HTTPS.';
+					throw new Error(errorCause);
 				}
 
 				if (!('serviceWorker' in navigator)) {
-					error_cause = "Your browser doesn't support service workers.";
-					throw new Error(error_cause);
+					errorCause = "Your browser doesn't support service workers.";
+					throw new Error(errorCause);
 				}
 
-				error_cause = 'Failure loading the Stomp bootstrapper.';
+				errorCause = 'Failure loading the Stomp bootstrapper.';
 				await bootstrapper.current.promise;
-				error_cause = undefined;
+				errorCause = undefined;
 
 				const { StompBoot } = global;
 
@@ -46,27 +46,27 @@ export default function Rammerhead(props) {
 
 				const boot = new StompBoot(config);
 
-				error_cause = 'Failure registering the Stomp Service Worker.';
+				errorCause = 'Failure registering the Stomp Service Worker.';
 				await boot.ready;
-				error_cause = undefined;
+				errorCause = undefined;
 
-				error_cause = 'Bare server is unreachable.';
+				errorCause = 'Bare server is unreachable.';
 				{
 					const bare = await fetch(BARE_API);
 					if (!bare.ok) {
 						throw await bare.json();
 					}
 				}
-				error_cause = undefined;
+				errorCause = undefined;
 
 				global.location.replace(
-					boot.html(props.compat_layout.current.destination)
+					boot.html(props.compatLayout.current.destination)
 				);
 			} catch (error) {
-				props.compat_layout.current.report(error, error_cause, 'Stomp');
+				props.compatLayout.current.report(error, errorCause, 'Stomp');
 			}
 		})();
-	}, [props.compat_layout, bootstrapper]);
+	}, [props.compatLayout, bootstrapper]);
 
 	return (
 		<main className="compat">

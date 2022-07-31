@@ -1,33 +1,40 @@
-let categories;
-
-// eslint-disable-next-line no-unused-vars
-export default categories = {
-	action: {
+const categories = [
+	{
+		id: 'action',
 		short: 'Action',
 		name: 'Action & Adventure',
 	},
-	platformer: {
+	{
+		id: 'platformer',
 		name: 'Platformer',
 	},
-	shooter: {
+	{
+		id: 'shooter',
 		short: 'Shooters',
 		name: 'Shooters & Strategy',
 	},
-	rpg: {
+	{
+		id: 'rpg',
 		name: 'RPG',
 	},
-	sandbox: {
+	{
+		id: 'sandbox',
 		name: 'Sandbox',
 	},
-	survival: {
+	{
+		id: 'survival',
 		short: 'Survival',
 		name: 'Survival & Horror',
 	},
-	sports: {
+	{
+		id: 'sports',
 		short: 'Sports',
 		name: 'Simulation & Sports',
 	},
-	puzzle: {
+	{
+		id: 'puzzle',
 		name: 'Puzzle',
 	},
-};
+];
+
+export default categories;

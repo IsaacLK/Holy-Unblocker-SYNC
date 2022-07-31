@@ -85,21 +85,21 @@ export function MenuTab(props) {
 
 export default forwardRef(function Layout(props, ref) {
 	const nav = useRef();
-	const [expanded, set_expanded] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 
 	useImperativeHandle(
 		ref,
 		() => ({
 			expanded,
-			set_expanded,
+			setExpanded,
 		}),
-		[expanded, set_expanded]
+		[expanded, setExpanded]
 	);
 
 	useEffect(() => {
 		function keydown(event) {
 			if (expanded && event.key === 'Escape') {
-				set_expanded(false);
+				setExpanded(false);
 			}
 		}
 
@@ -112,33 +112,15 @@ export default forwardRef(function Layout(props, ref) {
 		document.documentElement.dataset.expanded = Number(expanded);
 	}, [expanded]);
 
-	const ui_categories = [];
-
-	for (const id in categories) {
-		const { short, name } = categories[id];
-		ui_categories.push(
-			<Link
-				key={id}
-				to={`${resolveRoute('/theatre/', 'category')}?id=${id}`}
-				className="entry text"
-				onClick={() => {
-					set_expanded(false);
-				}}
-			>
-				<Obfuscated>{short || name}</Obfuscated>
-			</Link>
-		);
-	}
-
-	function close_menu() {
-		set_expanded(false);
+	function closeMenu() {
+		setExpanded(false);
 	}
 
 	return (
 		<>
 			<ObfuscateLayout />
 			<nav ref={nav} className="fixed-wide">
-				<div className="button" onClick={() => set_expanded(true)}>
+				<div className="button" onClick={() => setExpanded(true)}>
 					<Menu />
 				</div>
 				<Link to="/" className="entry logo">
@@ -150,13 +132,13 @@ export default forwardRef(function Layout(props, ref) {
 				</Link>
 			</nav>
 			<div className="content">
-				<div className="cover fixed-wide" onClick={close_menu}></div>
+				<div className="cover fixed-wide" onClick={closeMenu}></div>
 				<div tabIndex={0} className="menu">
 					<div className="top">
-						<div className="button" onClick={close_menu}>
+						<div className="button" onClick={closeMenu}>
 							<Menu />
 						</div>
-						<Link to="/" className="entry logo" onClick={close_menu}>
+						<Link to="/" className="entry logo" onClick={closeMenu}>
 							<Hat />
 						</Link>
 					</div>
@@ -166,19 +148,19 @@ export default forwardRef(function Layout(props, ref) {
 							name="Home"
 							iconFilled={<Home />}
 							iconOutlined={<HomeOutlined />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 						<MenuTab
 							route={resolveRoute('/', 'proxy')}
 							name="Proxy"
 							iconFilled={<WebAsset />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 						<MenuTab
 							route={resolveRoute('/', 'faq')}
 							name="FAQ"
 							iconFilled={<QuestionMark />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 
 						<div className="bar" />
@@ -187,7 +169,7 @@ export default forwardRef(function Layout(props, ref) {
 							route={resolveRoute('/theatre/', 'apps')}
 							name="Apps"
 							iconFilled={<Apps />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 
 						<MenuTab
@@ -195,7 +177,7 @@ export default forwardRef(function Layout(props, ref) {
 							name="Favorites"
 							iconFilled={<StarRounded />}
 							iconOutlined={<StarOutlineRounded />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 
 						<div className="bar" />
@@ -208,16 +190,29 @@ export default forwardRef(function Layout(props, ref) {
 							route={resolveRoute('/theatre/games/', '')}
 							name="Popular"
 							iconFilled={<SortRounded />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 						<MenuTab
 							route={resolveRoute('/theatre/games/', 'all')}
 							name="All"
 							iconFilled={<List />}
-							onClick={close_menu}
+							onClick={closeMenu}
 						/>
 						<div className="title">Genre</div>
-						<div className="genres">{ui_categories}</div>
+						<div className="genres">
+							{categories.map((category) => (
+								<Link
+									key={category.id}
+									to={`${resolveRoute('/theatre/', 'category')}?id=${
+										category.id
+									}`}
+									className="entry text"
+									onClick={() => setExpanded(false)}
+								>
+									<Obfuscated>{category.short || category.name}</Obfuscated>
+								</Link>
+							))}
+						</div>
 					</div>
 				</div>
 				<Outlet />

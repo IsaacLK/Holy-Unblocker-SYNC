@@ -46,13 +46,13 @@ export class TheatreAPI extends DatabaseAPI {
 	 */
 	async category(params) {
 		return await this.fetch(
-			'./theatre/?' + new URLSearchParams(this.sort_params(params))
+			'./theatre/?' + new URLSearchParams(this.sortParams(params))
 		);
 	}
 }
 
 function Item(props) {
-	const [loaded, set_loaded] = useState(false);
+	const [loaded, setLoaded] = useState(false);
 
 	return (
 		<Link
@@ -63,7 +63,7 @@ function Item(props) {
 				<img
 					alt=""
 					loading="lazy"
-					onLoad={() => set_loaded(true)}
+					onLoad={() => setLoaded(true)}
 					src={new URL(`./thumbnails/${props.id}.webp`, THEATRE_CDN)}
 				></img>
 			</div>

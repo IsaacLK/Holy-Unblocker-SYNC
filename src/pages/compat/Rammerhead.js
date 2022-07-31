@@ -6,64 +6,63 @@ import { useEffect } from 'react';
 
 export default function Rammerhead(props) {
 	useEffect(() => {
-		void (async function () {
-			let error_cause;
+		(async function () {
+			let errorCause;
 
 			try {
 				const api = new RammerheadAPI(RH_API);
 
 				// according to our NGINX config
-				if (process.env.NODE_ENV === 'production') {
+				if (process.env.NODE_ENV === 'production')
 					Cookies.set('auth_proxy', 1, {
 						domain: `.${global.location.host}`,
 						expires: 1000 * 60 * 60 * 24 * 7, // 1 week
 						secure: global.location.protocol === 'https:',
 						sameSite: 'lax',
 					});
-				}
 
-				error_cause = 'Rammerhead server is unreachable.';
+				errorCause = 'Rammerhead server is unreachable.';
 				await fetch(RH_API);
-				error_cause = undefined;
+				errorCause = undefined;
 
-				error_cause = 'Unable to check if the saved session exists.';
+				errorCause = 'Unable to check if the saved session exists.';
 				if (
 					!localStorage.rammerhead_session ||
-					!(await api.sessionexists(localStorage.rammerhead_session))
+					!(await api.sessionExists(localStorage.rammerhead_session))
 				) {
-					error_cause = 'Unable to create a new Rammerhead session.';
-					const session = await api.newsession();
-					error_cause = undefined;
+					errorCause = 'Unable to create a new Rammerhead session.';
+					const session = await api.newSession();
+					errorCause = undefined;
 					localStorage.rammerhead_session = session;
 				}
 
 				const session = localStorage.rammerhead_session;
 
-				error_cause = undefined;
+				errorCause = undefined;
 
-				error_cause = 'Unable to edit a Rammerhead session.';
-				await api.editsession(session, false, true);
-				error_cause = undefined;
+				errorCause = 'Unable to edit a Rammerhead session.';
+				await api.editSession(session, false, true);
+				errorCause = undefined;
 
-				error_cause = 'Unable to retrieve shuffled dictionary.';
+				errorCause = 'Unable to retrieve shuffled dictionary.';
 				const dict = await api.shuffleDict(session);
-				error_cause = undefined;
+				errorCause = undefined;
 
 				const shuffler = new StrShuffler(dict);
 
 				global.location.replace(
 					new URL(
 						`${session}/${shuffler.shuffle(
-							props.compat_layout.current.destination
+							props.compatLayout.current.destination
 						)}`,
 						RH_API
 					)
 				);
 			} catch (error) {
-				props.compat_layout.current.report(error, error_cause, 'Rammerhead');
+				props.compatLayout.current.report(error, errorCause, 'Rammerhead');
 			}
 		})();
-	}, [props.compat_layout]);
+	}, [props.compatLayout]);
 
 	return (
 		<main className="compat">

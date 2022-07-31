@@ -6,17 +6,17 @@ const rand = create(navigator.userAgent + global.location.origin);
 
 const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-let used_chars = '';
+let usedChars = '';
 
-function unused_char() {
+function unusedChar() {
 	while (true) {
 		const char = chars[rand(chars.length)];
 
-		if (used_chars.includes(char)) {
+		if (usedChars.includes(char)) {
 			continue;
 		}
 
-		used_chars += char;
+		usedChars += char;
 
 		return char;
 	}
@@ -26,18 +26,18 @@ function classes() {
 	const classes = [];
 
 	for (let i = 0; i < 7; i++) {
-		classes.push(unused_char());
+		classes.push(unusedChar());
 	}
 
 	return classes;
 }
 
-const junk_classes = classes();
-const real_classes = classes();
-const ellipsis_classes = classes();
+const junkClasses = classes();
+const realClasses = classes();
+const ellipsisClasses = classes();
 
-const char_class = unused_char();
-const string_class = unused_char();
+const charClass = unusedChar();
+const stringClass = unusedChar();
 
 export function ObfuscateLayout() {
 	const style = useRef();
@@ -45,17 +45,17 @@ export function ObfuscateLayout() {
 	useEffect(() => {
 		const { sheet } = style.current;
 
-		for (const junk of junk_classes) {
+		for (const junk of junkClasses) {
 			sheet.insertRule(
-				`.${string_class} .${junk}{position:absolute;z-index:-10;opacity:0}`
+				`.${stringClass} .${junk}{position:absolute;z-index:-10;opacity:0}`
 			);
 		}
 
 		// word
-		sheet.insertRule(`.${string_class}>span{display:inline-block}`);
+		sheet.insertRule(`.${stringClass}>span{display:inline-block}`);
 
-		for (const ellipsis of ellipsis_classes) {
-			sheet.insertRule(`.${string_class} .${ellipsis}{display:inline}`);
+		for (const ellipsis of ellipsisClasses) {
+			sheet.insertRule(`.${stringClass} .${ellipsis}{display:inline}`);
 		}
 	}, []);
 
@@ -66,14 +66,14 @@ class ObfuscateContext {
 	constructor(text) {
 		this.rand = create(text + navigator.userAgent + global.location.origin);
 	}
-	ellipsis_class() {
-		return ellipsis_classes[this.rand(ellipsis_classes.length)];
+	ellipsisClass() {
+		return ellipsisClasses[this.rand(ellipsisClasses.length)];
 	}
-	junk_class() {
-		return junk_classes[this.rand(junk_classes.length)];
+	junkClass() {
+		return junkClasses[this.rand(junkClasses.length)];
 	}
-	real_class() {
-		return real_classes[this.rand(real_classes.length)];
+	realClass() {
+		return realClasses[this.rand(realClasses.length)];
 	}
 	random(chars, i, ci) {
 		const r = this.rand(2);
@@ -84,13 +84,13 @@ class ObfuscateContext {
 			// eslint-disable-next-line
 			case 0:
 				return (
-					<span key={i} className={this.junk_class()}>
+					<span key={i} className={this.junkClass()}>
 						{chars[chars.length - ci]}
 					</span>
 				);
 			case 1:
 				return (
-					<span key={i} className={this.junk_class()}>
+					<span key={i} className={this.junkClass()}>
 						{String.fromCharCode(chars[chars.length - ci - 1].charCodeAt() ^ i)}
 					</span>
 				);
@@ -120,13 +120,13 @@ export const ObfuscatedText = memo(function ObfuscatedText(props) {
 
 			const content = [];
 
-			const add_chars = context.rand.intBetween(1, 2);
-			const real_at_i = context.rand(add_chars);
+			const addChars = context.rand.intBetween(1, 2);
+			const realAtI = context.rand(addChars);
 
-			for (let i = 0; i < add_chars; i++) {
-				if (i === real_at_i) {
+			for (let i = 0; i < addChars; i++) {
+				if (i === realAtI) {
 					content.push(
-						<span key={`${wi}${ci}${i}`} className={context.real_class()}>
+						<span key={`${wi}${ci}${i}`} className={context.realClass()}>
 							{char}
 						</span>
 					);
@@ -136,7 +136,7 @@ export const ObfuscatedText = memo(function ObfuscatedText(props) {
 			}
 
 			added.push(
-				<span key={`${wi}${ci}`} className={char_class}>
+				<span key={`${wi}${ci}`} className={charClass}>
 					{content}
 				</span>
 			);
@@ -144,7 +144,7 @@ export const ObfuscatedText = memo(function ObfuscatedText(props) {
 
 		output.push(
 			<span
-				className={clsx(props.ellipsis && context.ellipsis_class())}
+				className={clsx(props.ellipsis && context.ellipsisClass())}
 				key={`${wi}`}
 			>
 				{added}
@@ -156,7 +156,7 @@ export const ObfuscatedText = memo(function ObfuscatedText(props) {
 		}
 	}
 
-	return <span className={string_class}>{output}</span>;
+	return <span className={stringClass}>{output}</span>;
 });
 
 /**

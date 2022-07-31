@@ -78,13 +78,14 @@ function PlayerProxy(props) {
 function CategoryProxy(props) {
 	const [searchParams] = useSearchParams();
 	const id = searchParams.get('id');
+	const category = categories.find((category) => category.id === id);
 
 	return (
 		<Suspense fallback={<></>}>
 			<TheatreCategory
 				{...props}
 				key={id}
-				name={categories[id].name}
+				name={category.name}
 				category={id}
 				id={id}
 				placeholder="Search by game name"
@@ -96,13 +97,13 @@ function CategoryProxy(props) {
 // https://reactrouter.com/docs/en/v6/getting-started/overview
 export default function App() {
 	const layout = createRef();
-	const main_layout = createRef();
-	const compat_layout = createRef();
+	const mainLayout = createRef();
+	const compatLayout = createRef();
 
 	const layouts = {
 		layout,
-		main_layout,
-		compat_layout,
+		mainLayout,
+		compatLayout,
 	};
 
 	return (
@@ -111,7 +112,7 @@ export default function App() {
 			<Routes>
 				<Route
 					path={resolveRoute('/', '')}
-					element={<MainLayout ref={main_layout} />}
+					element={<MainLayout ref={mainLayout} />}
 				>
 					<Route
 						index
@@ -186,7 +187,10 @@ export default function App() {
 										name="All Games"
 										id="all"
 										key="all"
-										category={Object.keys(categories).join(',')}
+										showCategory
+										category={categories
+											.map((category) => category.id)
+											.join(',')}
 										placeholder="Search by game name"
 										{...layouts}
 									/>
@@ -273,7 +277,7 @@ export default function App() {
 				</Route>
 				<Route
 					path={resolveRoute('/compat/', '')}
-					element={<CompatLayout ref={compat_layout} />}
+					element={<CompatLayout ref={compatLayout} />}
 				>
 					<Route
 						path={resolveRoute('/compat/', 'rammerhead', false)}

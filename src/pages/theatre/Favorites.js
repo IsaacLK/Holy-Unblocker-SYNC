@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 const FETCH_FAILED = /TypeError: Failed to fetch/;
 
 export default function Favorites(props) {
-	const [data, set_data] = useState(() =>
+	const [data, setData] = useState(() =>
 		props.layout.current.settings.favorites.map((id) => ({
 			loading: true,
 			id,
@@ -17,7 +17,7 @@ export default function Favorites(props) {
 	useEffect(() => {
 		const abort = new AbortController();
 
-		void (async function () {
+		(async function () {
 			const api = new TheatreAPI(DB_API, abort.signal);
 			const data = [];
 
@@ -37,11 +37,11 @@ export default function Favorites(props) {
 			}
 
 			// update settings
-			props.layout.current.set_settings({
+			props.layout.current.setSettings({
 				...props.layout.current.settings,
 			});
 
-			set_data(data);
+			setData(data);
 		})();
 
 		return () => abort.abort();

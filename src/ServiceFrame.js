@@ -1,6 +1,6 @@
 import './styles/Service.scss';
 import { Notification } from './Notifications.js';
-import resolve_proxy from './ProxyResolver.js';
+import resolveProxy from './ProxyResolver.js';
 import { BARE_API } from './consts.js';
 import { decryptURL, encryptURL } from './cryptURL.js';
 import { Obfuscated } from './obfuscate.js';
@@ -24,12 +24,12 @@ import { useSearchParams } from 'react-router-dom';
 
 export default forwardRef(function ServiceFrame(props, ref) {
 	const iframe = useRef();
-	const [search, set_search] = useSearchParams();
-	const [first_load, set_first_load] = useState(false);
-	const [revoke_icon, set_revoke_icon] = useState(false);
-	const [last_src, set_last_src] = useState('');
+	const [search, setSearch] = useSearchParams();
+	const [firstLoad, setFirstLoad] = useState(false);
+	const [revokeIcon, setRevokeIcon] = useState(false);
+	const [lastSrc, setLastSrc] = useState('');
 	const bare = useMemo(() => new BareClient(BARE_API), []);
-	const links_tried = useMemo(() => new WeakMap(), []);
+	const linksTried = useMemo(() => new WeakMap(), []);
 
 	const src = useMemo(() => {
 		if (search.has('query')) {
@@ -38,22 +38,22 @@ export default forwardRef(function ServiceFrame(props, ref) {
 			return '';
 		}
 	}, [search]);
-	const [title, set_title] = useState(src);
-	const [icon, set_icon] = useState('');
+	const [title, setTitle] = useState(src);
+	const [icon, setIcon] = useState('');
 
 	useEffect(() => {
 		window.ifr = iframe.current;
 
 		if (src) {
-			void (async function () {
+			(async function () {
 				try {
-					const proxied_src = await resolve_proxy(
+					const proxiedSrc = await resolveProxy(
 						src,
 						props.layout.current.settings.proxy
 					);
 
-					iframe.current.contentWindow.location.href = proxied_src;
-					set_last_src(proxied_src);
+					iframe.current.contentWindow.location.href = proxiedSrc;
+					setLastSrc(proxiedSrc);
 				} catch (error) {
 					console.error(error);
 					props.layout.current.notifications.current.add(
@@ -66,18 +66,18 @@ export default forwardRef(function ServiceFrame(props, ref) {
 				}
 			})();
 		} else {
-			set_first_load(false);
-			set_title('');
-			set_icon('');
+			setFirstLoad(false);
+			setTitle('');
+			setIcon('');
 			iframe.current.contentWindow.location.href = 'about:blank';
-			set_last_src('about:blank');
+			setLastSrc('about:blank');
 		}
 	}, [props.layout, src]);
 
 	useImperativeHandle(ref, () => ({
 		proxy(src) {
 			search.has('query') && decryptURL(search.get('query'));
-			set_search({
+			setSearch({
 				...Object.fromEntries(search),
 				query: encryptURL(src),
 			});
@@ -85,7 +85,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 	}));
 
 	useEffect(() => {
-		function focus_listener() {
+		function focusListener() {
 			if (!iframe.current) {
 				return;
 			}
@@ -93,15 +93,15 @@ export default forwardRef(function ServiceFrame(props, ref) {
 			iframe.current.contentWindow.focus();
 		}
 
-		window.addEventListener('focus', focus_listener);
+		window.addEventListener('focus', focusListener);
 
 		return () => {
-			window.removeEventListener('focus', focus_listener);
+			window.removeEventListener('focus', focusListener);
 		};
 	}, [iframe]);
 
-	const test_proxy_update = useCallback(
-		async function test_proxy_update() {
+	const testProxyUpdate = useCallback(
+		async function testProxyUpdate() {
 			if (!iframe.current) {
 				return;
 			}
@@ -110,7 +110,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 
 			// * didn't hook our call to new Function
 			try {
-				set_last_src(contentWindow.location.href);
+				setLastSrc(contentWindow.location.href);
 			} catch (error) {
 				// possibly an x-frame error
 				return;
@@ -123,10 +123,10 @@ export default forwardRef(function ServiceFrame(props, ref) {
 			if (location === contentWindow.location) {
 				title = src;
 			} else {
-				const current_title = contentWindow.document.title;
+				const currentTitle = contentWindow.document.title;
 
-				if (current_title) {
-					title = current_title;
+				if (currentTitle) {
+					title = currentTitle;
 				} else {
 					title = location.toString();
 				}
@@ -142,30 +142,30 @@ export default forwardRef(function ServiceFrame(props, ref) {
 					icon = new URL('/favicon.ico', location).toString();
 				}
 
-				if (!links_tried.has(location)) {
-					links_tried.set(location, new Set());
+				if (!linksTried.has(location)) {
+					linksTried.set(location, new Set());
 				}
 
-				if (!links_tried.get(location).has(icon)) {
-					links_tried.get(location).add(icon);
+				if (!linksTried.get(location).has(icon)) {
+					linksTried.get(location).add(icon);
 
 					const outgoing = await bare.fetch(icon);
 
-					set_icon(URL.createObjectURL(await outgoing.blob()));
-					set_revoke_icon(true);
+					setIcon(URL.createObjectURL(await outgoing.blob()));
+					setRevokeIcon(true);
 				}
 			}
 
-			set_title(title);
+			setTitle(title);
 		},
-		[bare, links_tried, src]
+		[bare, linksTried, src]
 	);
 
 	useEffect(() => {
-		const interval = setInterval(test_proxy_update, 50);
-		test_proxy_update();
+		const interval = setInterval(testProxyUpdate, 50);
+		testProxyUpdate();
 		return () => clearInterval(interval);
-	}, [test_proxy_update]);
+	}, [testProxyUpdate]);
 
 	useEffect(() => {
 		document.documentElement.dataset.service = Number(Boolean(src));
@@ -178,7 +178,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 					className="button"
 					onClick={() => {
 						search.delete('query');
-						set_search(search);
+						setSearch(search);
 					}}
 				/>
 				{icon ? (
@@ -186,11 +186,11 @@ export default forwardRef(function ServiceFrame(props, ref) {
 						className="icon"
 						alt=""
 						src={icon}
-						onError={() => set_icon('')}
+						onError={() => setIcon('')}
 						onLoad={() => {
-							if (revoke_icon) {
+							if (revokeIcon) {
 								URL.revokeObjectURL(icon);
-								set_revoke_icon(false);
+								setRevokeIcon(false);
 							}
 						}}
 					/>
@@ -201,7 +201,7 @@ export default forwardRef(function ServiceFrame(props, ref) {
 					<Obfuscated ellipsis>{title}</Obfuscated>
 				</p>
 				<div className="shift-right"></div>
-				<a href={last_src} className="button">
+				<a href={lastSrc} className="button">
 					<OpenInNew />
 				</a>
 				<Fullscreen
@@ -213,12 +213,12 @@ export default forwardRef(function ServiceFrame(props, ref) {
 				className="embed"
 				title="embed"
 				ref={iframe}
-				data-first-load={Number(first_load)}
+				data-first-load={Number(firstLoad)}
 				onLoad={() => {
-					test_proxy_update();
+					testProxyUpdate();
 
 					if (src !== '') {
-						set_first_load(true);
+						setFirstLoad(true);
 					}
 				}}
 			></iframe>

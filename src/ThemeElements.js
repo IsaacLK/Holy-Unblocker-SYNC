@@ -71,20 +71,19 @@ export const ThemeInput = forwardRef(function ThemeInput(props, ref) {
 
 // <select ref={dummy_ref} forwardRef={ref}>
 
-export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
+export function ThemeSelect(props) {
 	// ref target
 	const input = useRef();
 	const container = useRef();
-	const [last_select, set_last_select] = useState(-1);
-	const [open, set_open] = useState(false);
+	const [lastSelect, setLastSelect] = useState(-1);
+	const [open, setOpen] = useState(false);
 
-	async function set_selected(value) {
-		await _set_selected(value);
-		await set_open(false);
+	function setSelected(value) {
+		_setSelected(value);
+		setOpen(false);
 
-		if (typeof props.onChange === 'function') {
-			props.onChange({ target: input.current });
-		}
+		if (typeof props.onChange === 'function')
+			setTimeout(() => props.onChange({ target: input.current }));
 	}
 
 	const { className, onChange, children, ...attributes } = props;
@@ -92,9 +91,9 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 	const list = [];
 
 	const options = [];
-	const available_options = [];
+	const availableOptions = [];
 
-	let default_selected = 0;
+	let defaultSelected = 0;
 
 	for (const child of children) {
 		if (child.type === 'option') {
@@ -105,18 +104,18 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 			};
 
 			if (option.value === (props.value || props.defaultValue)) {
-				default_selected = options.length;
+				defaultSelected = options.length;
 			}
 
 			if (!option.disabled) {
-				available_options.push(options.length);
+				availableOptions.push(options.length);
 			}
 
 			options.push(option);
 		}
 	}
 
-	const [selected, _set_selected] = useState(default_selected);
+	const [selected, _setSelected] = useState(defaultSelected);
 
 	for (let i = 0; i < options.length; i++) {
 		const option = options[i];
@@ -125,18 +124,18 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 			<div
 				className={clsx(
 					'plain-option',
-					i === last_select && 'hover',
+					i === lastSelect && 'hover',
 					option.disabled && 'disabled'
 				)}
 				key={i}
 				onClick={() => {
 					if (!option.disabled) {
-						set_selected(i);
+						setSelected(i);
 					}
 				}}
 				onMouseOver={() => {
 					if (!option.disabled) {
-						set_last_select(i);
+						setLastSelect(i);
 					}
 				}}
 			>
@@ -153,16 +152,16 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 			data-open={Number(open)}
 			ref={container}
 			onKeyDown={(event) => {
-				let prevent_default = true;
+				let preventDefault = true;
 
 				switch (event.code) {
 					case 'ArrowDown':
 					case 'ArrowUp':
 						{
-							const last_i = last_select;
-							const last_i_available = available_options.indexOf(
-								[...available_options].sort(
-									(a, b) => Math.abs(a - last_i) - Math.abs(b - last_i)
+							const lastI = lastSelect;
+							const lastIAvailable = availableOptions.indexOf(
+								[...availableOptions].sort(
+									(a, b) => Math.abs(a - lastI) - Math.abs(b - lastI)
 								)[0]
 							);
 
@@ -170,21 +169,21 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 
 							switch (event.code) {
 								case 'ArrowDown':
-									if (last_i_available === available_options.length - 1) {
+									if (lastIAvailable === availableOptions.length - 1) {
 										next = 0;
 									} else {
-										next = last_i_available + 1;
-										if (options[last_i].disabled) {
+										next = lastIAvailable + 1;
+										if (options[lastI].disabled) {
 											next--;
 										}
 									}
 									break;
 								case 'ArrowUp':
-									if (last_i_available === 0) {
-										next = available_options.length - 1;
+									if (lastIAvailable === 0) {
+										next = availableOptions.length - 1;
 									} else {
-										next = last_i_available - 1;
-										if (options[last_i].disabled) {
+										next = lastIAvailable - 1;
+										if (options[lastI].disabled) {
 											next--;
 										}
 									}
@@ -192,47 +191,40 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 								// no default
 							}
 
-							const next_i = available_options[next];
+							const nextI = availableOptions[next];
 
-							set_last_select(next_i);
+							setLastSelect(nextI);
 
-							if (!open) {
-								set_selected(next_i);
-							}
+							if (!open) setSelected(nextI);
 						}
 						break;
 					case 'Enter':
-						if (open) {
-							set_selected(last_select);
-						} else {
-							set_open(true);
-						}
+						if (open) setSelected(lastSelect);
+						else setOpen(true);
 						break;
 					case 'Space':
-						set_open(true);
+						setOpen(true);
 						break;
 					default:
-						prevent_default = false;
+						preventDefault = false;
 						break;
 					// no default
 				}
 
-				if (prevent_default) {
+				if (preventDefault) {
 					event.preventDefault();
 				}
 			}}
 			onBlur={(event) => {
-				if (!event.target.contains(event.relatedTarget)) {
-					set_open(false);
-				}
+				if (!event.target.contains(event.relatedTarget)) setOpen(false);
 			}}
 		>
 			<input ref={input} value={options[selected]?.value} readOnly hidden />
 			<div
 				className="toggle"
-				onClick={async () => {
-					set_open(!open);
-					set_last_select(selected);
+				onClick={() => {
+					setOpen(!open);
+					setLastSelect(selected);
 					container.current.focus();
 				}}
 			>
@@ -242,11 +234,11 @@ export const ThemeSelect = forwardRef(function ThemeSelect(props, ref) {
 			<div
 				className="list"
 				onMouseLeave={() => {
-					set_last_select(-1);
+					setLastSelect(-1);
 				}}
 			>
 				{list}
 			</div>
 		</div>
 	);
-});
+}

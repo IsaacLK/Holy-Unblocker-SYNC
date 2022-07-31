@@ -11,7 +11,7 @@ export default function Home(props) {
 			<h2>
 				<Obfuscated>Privacy right at your fingertips.</Obfuscated>
 			</h2>
-			<ThemeButton onClick={() => props.main_layout.current.set_expanded(true)}>
+			<ThemeButton onClick={() => props.mainLayout.current.setExpanded(true)}>
 				<Obfuscated>Get Started</Obfuscated>
 			</ThemeButton>
 		</main>

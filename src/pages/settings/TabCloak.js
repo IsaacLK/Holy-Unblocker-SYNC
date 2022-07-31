@@ -13,7 +13,7 @@ const bare = new BareClient(BARE_API);
  * @param {string} url
  * @returns {{title:string,icon:string,url:string}}
  */
-async function extract_data(url) {
+async function extractData(url) {
 	const response = await bare.fetch(url, {
 		redirect: 'follow',
 	});
@@ -69,7 +69,7 @@ async function extract_data(url) {
 const whitespace = /\s+/;
 const protocol = /^\w+:/;
 
-function resolve_url(input) {
+function resolveURL(input) {
 	if (input.match(protocol)) {
 		return input;
 	} else if (input.includes('.') && !input.match(whitespace)) {
@@ -94,7 +94,7 @@ export default function TabCloak(props) {
 
 	async function onSubmit() {
 		try {
-			const resolved = resolve_url(input.current.value);
+			const resolved = resolveURL(input.current.value);
 
 			let title, icon, url;
 
@@ -109,14 +109,14 @@ export default function TabCloak(props) {
 						<Notification description="Fetching..." type="info" />
 					);
 
-					({ title, icon, url } = await extract_data(resolved));
+					({ title, icon, url } = await extractData(resolved));
 
 					break;
 			}
 
 			input.current.value = url;
 
-			props.layout.current.set_cloak({
+			props.layout.current.setCloak({
 				title,
 				icon,
 				url,
@@ -168,7 +168,7 @@ export default function TabCloak(props) {
 			<div>
 				<ThemeButton
 					onClick={() => {
-						props.layout.current.set_cloak({
+						props.layout.current.setCloak({
 							title: '',
 							icon: '',
 							url: '',

@@ -10,13 +10,13 @@ const ANIMATION = 0.3e3;
  * @param {{manager: import('react').RefObject<NotificationsManager>, id: string, type: 'warning'|'error'|'sucess'|'info', duration: number, title: JSX.Element, description: JSX.Element}} props
  */
 export function Notification(props) {
-	const [hide, set_hide] = useState(false);
+	const [hide, setHide] = useState(false);
 
 	const duration = props.duration || 5e3;
 
 	useEffect(() => {
 		setTimeout(() => {
-			set_hide(true);
+			setHide(true);
 			setTimeout(() => props.manager.current.delete(props.id), ANIMATION);
 		}, duration);
 	}, [duration, props.id, props.manager]);
@@ -68,7 +68,7 @@ export default forwardRef(function NotificationsManager(_props, ref) {
 	/**
 	 * @type {Notification[]}
 	 */
-	const [notifications, set_notifications] = useState([]);
+	const [notifications, setNotifications] = useState([]);
 
 	useImperativeHandle(
 		ref,
@@ -90,7 +90,7 @@ export default forwardRef(function NotificationsManager(_props, ref) {
 					/>
 				);
 
-				set_notifications(_notifications);
+				setNotifications(_notifications);
 			},
 			/**
 			 *
@@ -107,7 +107,7 @@ export default forwardRef(function NotificationsManager(_props, ref) {
 					}
 
 					_notifications.splice(i, 1);
-					set_notifications(_notifications);
+					setNotifications(_notifications);
 
 					return true;
 				}

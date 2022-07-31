@@ -13,7 +13,7 @@ import {
 } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-function load_script(src) {
+function loadScript(src) {
 	const script = document.createElement('script');
 	script.src = src;
 	script.async = true;
@@ -33,16 +33,16 @@ function load_script(src) {
 	return [promise, script];
 }
 
-function create_promise_external() {
-	let promise_external;
+function createPromiseExternal() {
+	let promiseExternal;
 	const promise = new Promise((resolve, reject) => {
-		promise_external = { resolve, reject };
+		promiseExternal = { resolve, reject };
 	});
-	return [promise, promise_external];
+	return [promise, promiseExternal];
 }
 
 export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
-	const [promise, promise_external] = useMemo(create_promise_external, []);
+	const [promise, promiseExternal] = useMemo(createPromiseExternal, []);
 
 	useImperativeHandle(ref, () => ({
 		promise,
@@ -52,24 +52,24 @@ export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
 		const abort = new AbortController();
 		const scripts = [];
 
-		void (async function () {
+		(async function () {
 			for (const child of props.children) {
 				if (child.type !== Script) {
 					continue;
 				}
 
-				const [promise, script] = load_script(child.props.src);
+				const [promise, script] = loadScript(child.props.src);
 
 				scripts.push(script);
 
 				try {
 					await promise;
 				} catch (error) {
-					promise_external.reject();
+					promiseExternal.reject();
 				}
 			}
 
-			promise_external.resolve();
+			promiseExternal.resolve();
 		})();
 
 		return () => {
@@ -78,27 +78,27 @@ export const ScriptsOrder = forwardRef(function ScriptsOrder(props, ref) {
 				script.remove();
 			}
 		};
-	}, [promise, promise_external, props.children]);
+	}, [promise, promiseExternal, props.children]);
 
 	return <></>;
 });
 
 export const Script = forwardRef(function Script(props, ref) {
-	const [promise, promise_external] = useMemo(create_promise_external, []);
+	const [promise, promiseExternal] = useMemo(createPromiseExternal, []);
 
 	useImperativeHandle(ref, () => ({
 		promise,
 	}));
 
 	useEffect(() => {
-		const [promise, script] = load_script(props.src);
+		const [promise, script] = loadScript(props.src);
 
-		promise.then(promise_external.resolve).catch(promise_external.reject);
+		promise.then(promiseExternal.resolve).catch(promiseExternal.reject);
 
 		return () => {
 			script.remove();
 		};
-	}, [promise, promise_external, props.src]);
+	}, [promise, promiseExternal, props.src]);
 
 	return <></>;
 });
@@ -106,7 +106,7 @@ export const Script = forwardRef(function Script(props, ref) {
 export default forwardRef(function CompatLayout(props, ref) {
 	const location = useLocation();
 
-	const [error, set_error] = useState();
+	const [error, setError] = useState();
 
 	useImperativeHandle(
 		ref,
@@ -121,7 +121,7 @@ export default forwardRef(function CompatLayout(props, ref) {
 			report(error, cause, origin) {
 				console.error(error);
 
-				set_error({
+				setError({
 					error,
 					cause,
 					origin,

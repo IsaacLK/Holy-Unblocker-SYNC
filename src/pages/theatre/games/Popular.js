@@ -11,48 +11,46 @@ import { ArrowForward } from '@mui/icons-material';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const LIMIT = 8;
-const loading_categories = {
+const entryLimit = 8;
+const loadingCategories = {
 	total: NaN,
 	entries: [],
 };
 
-for (const category in categories) {
-	for (let i = 0; i < LIMIT; i++) {
-		loading_categories.entries.push({
+for (const category of categories)
+	for (let i = 0; i < entryLimit; i++)
+		loadingCategories.entries.push({
 			id: i,
 			loading: true,
-			category,
+			category: category.id,
 		});
-	}
-}
 
 export default function Popular() {
-	const category = Object.keys(categories).join(',');
+	const category = categories.map((category) => category.id).join(',');
 
-	const [data, set_data] = useState(loading_categories);
+	const [data, setData] = useState(loadingCategories);
 
-	const [error, set_error] = useState();
+	const [error, setError] = useState();
 	const main = useRef();
 
 	useEffect(() => {
 		const abort = new AbortController();
 
-		void (async function () {
+		(async function () {
 			const api = new TheatreAPI(DB_API, abort.signal);
 
 			try {
 				const data = await api.category({
 					sort: 'plays',
 					category,
-					limitPerCategory: LIMIT,
+					limitPerCategory: entryLimit,
 				});
 
-				set_data(data);
+				setData(data);
 			} catch (error) {
 				if (!isAbortError(error)) {
 					console.error(error);
-					set_error(error);
+					setError(error);
 				}
 			}
 		})();
@@ -98,46 +96,41 @@ export default function Popular() {
 
 	const _categories = {};
 
-	for (const category in categories) {
-		_categories[category] = [];
-	}
+	for (const category of categories)
+		_categories[category.id] = {
+			entries: [],
+			category,
+		};
 
-	for (const item of data.entries) {
-		_categories[item.category].push(item);
-	}
-
-	const jsx_categories = [];
-
-	for (const id in _categories) {
-		let name;
-
-		for (const i in categories) {
-			if (id === i) {
-				name = categories[i].name;
-			}
-		}
-
-		jsx_categories.push(
-			<section className="expand" key={id}>
-				<div className="name">
-					<h1>{name}</h1>
-					<Link
-						to={`${resolveRoute('/theatre/', 'category')}?id=${id}`}
-						className="theme-link see-all"
-					>
-						See All
-						<ArrowForward />
-					</Link>
-				</div>
-				<ItemList className="items flex" items={_categories[id]} />
-			</section>
-		);
-	}
+	for (const item of data.entries)
+		_categories[item.category].entries.push(item);
 
 	return (
 		<main ref={main} className="theatre-category">
-			<SearchBar category={category} placeholder="Search by game name" />
-			{jsx_categories}
+			<SearchBar
+				showCategory
+				category={category}
+				placeholder="Search by game name"
+			/>
+			{Object.values(_categories).map((section) => {
+				return (
+					<section className="expand" key={section.category.id}>
+						<div className="name">
+							<h1>{category.name}</h1>
+							<Link
+								to={`${resolveRoute('/theatre/', 'category')}?id=${
+									section.category.id
+								}`}
+								className="theme-link see-all"
+							>
+								See All
+								<ArrowForward />
+							</Link>
+						</div>
+						<ItemList className="items flex" items={section.entries} />
+					</section>
+				);
+			})}
 		</main>
 	);
 }

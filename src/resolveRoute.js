@@ -3,10 +3,10 @@ import process from 'process';
 
 export default function resolveRoute(dir, page, absolute = true) {
 	let pages;
-	let route_i;
+	let routeI;
 
-	for (route_i = 0; route_i < routes.length; route_i++) {
-		const route = routes[route_i];
+	for (routeI = 0; routeI < routes.length; routeI++) {
+		const route = routes[routeI];
 
 		if (dir === route.dir) {
 			pages = route.pages;
@@ -14,12 +14,10 @@ export default function resolveRoute(dir, page, absolute = true) {
 		}
 	}
 
-	if (pages === undefined) {
-		throw new Error(`Unknown directory ${dir}`);
-	}
+	if (!pages) throw new Error(`Unknown directory ${dir}`);
 
-	let res_dir = '';
-	let res_file = '';
+	let resDir = '';
+	let resFile = '';
 
 	if (page !== '') {
 		switch (process.env.REACT_APP_ROUTER) {
@@ -30,34 +28,34 @@ export default function resolveRoute(dir, page, absolute = true) {
 					throw new TypeError(`Unknown page ${page}`);
 				}
 
-				res_file = `${index}.html`;
+				resFile = `${index}.html`;
 				break;
 			}
 			default:
 			case 'file':
-				res_file = `${page}.html`;
+				resFile = `${page}.html`;
 				break;
 		}
 	}
 
 	if (dir === '/') {
-		res_dir = '/';
+		resDir = '/';
 	} else {
 		switch (process.env.REACT_APP_ROUTER) {
 			case 'id': {
-				res_dir = `/${route_i}/`;
+				resDir = `/${routeI}/`;
 				break;
 			}
 			default:
 			case 'file':
-				res_dir = dir;
+				resDir = dir;
 				break;
 		}
 	}
 
 	if (absolute) {
-		return `${res_dir}${res_file}`;
+		return `${resDir}${resFile}`;
 	} else {
-		return res_file;
+		return resFile;
 	}
 }

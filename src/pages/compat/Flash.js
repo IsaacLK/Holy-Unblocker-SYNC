@@ -5,24 +5,24 @@ import { useEffect, useRef, useState } from 'react';
 export default function Flash(props) {
 	const player = useRef();
 	const container = useRef();
-	const [ruffle_loaded, set_ruffle_loaded] = useState(false);
-	const ruffle_bundle = useRef();
+	const [ruffleLoaded, setRuffleLoaded] = useState(false);
+	const ruffleBundle = useRef();
 
 	useEffect(() => {
-		void (async function () {
-			let error_cause;
+		(async function () {
+			let errorCause;
 
 			try {
-				error_cause = 'Error loading Ruffle player.';
-				await ruffle_bundle.current.promise;
-				error_cause = undefined;
+				errorCause = 'Error loading Ruffle player.';
+				await ruffleBundle.current.promise;
+				errorCause = undefined;
 
 				const ruffle = global.RufflePlayer.newest();
 				player.current = ruffle.createPlayer();
 				container.current.append(player.current);
 
 				player.current.addEventListener('loadeddata', () => {
-					set_ruffle_loaded(true);
+					setRuffleLoaded(true);
 				});
 
 				player.current.addEventListener('error', (event) => {
@@ -30,26 +30,26 @@ export default function Flash(props) {
 				});
 
 				player.current.load({
-					url: props.compat_layout.current.destination.toString(),
+					url: props.compatLayout.current.destination.toString(),
 				});
 			} catch (error) {
-				props.compat_layout.current.report(error, error_cause, 'Rammerhead');
+				props.compatLayout.current.report(error, errorCause, 'Rammerhead');
 			}
 		})();
 
 		return () => {
 			player.current.remove();
 		};
-	}, [props.compat_layout, ruffle_bundle]);
+	}, [props.compatLayout, ruffleBundle]);
 
 	return (
 		<main
 			className="compat-flash"
-			data-loaded={Number(ruffle_loaded)}
+			data-loaded={Number(ruffleLoaded)}
 			ref={container}
 		>
-			<Script src="/ruffle/ruffle.js" ref={ruffle_bundle} />
-			{!ruffle_loaded && (
+			<Script src="/ruffle/ruffle.js" ref={ruffleBundle} />
+			{!ruffleLoaded && (
 				<>
 					Loading <Obfuscated>Flash Player</Obfuscated>...
 				</>

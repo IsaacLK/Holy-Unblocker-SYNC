@@ -14,7 +14,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 
 const LIMIT = 30;
 
-function create_loading(total) {
+function createLoading(total) {
 	const loading = {
 		total,
 		entries: [],
@@ -31,18 +31,24 @@ function create_loading(total) {
 	return loading;
 }
 
-export default function Category(props) {
-	const [search, set_search] = useSearchParams({
+export default function Category({
+	name,
+	category,
+	placeholder,
+	id,
+	showCategory,
+}) {
+	const [search, setSearch] = useSearchParams({
 		page: 0,
 	});
 	const page = parseInt(search.get('page'));
-	const [last_total, set_last_total] = useState(LIMIT * 2);
-	const [data, set_data] = useState(() => create_loading(last_total));
-	const max_page = Math.floor(data.total / LIMIT);
-	const error_cause = useRef();
-	const [error, set_error] = useState();
-	const [settings, set_settings] = useSettings(
-		`theatre category ${props.id} settings`,
+	const [lastTotal, setLastTotal] = useState(LIMIT * 2);
+	const [data, setData] = useState(() => createLoading(lastTotal));
+	const maxPage = Math.floor(data.total / LIMIT);
+	const errorCause = useRef();
+	const [error, setError] = useState();
+	const [settings, setSettings] = useSettings(
+		`theatre category ${id} settings`,
 		() => ({
 			sort: 'Most Popular',
 		})
@@ -51,7 +57,7 @@ export default function Category(props) {
 	useEffect(() => {
 		const abort = new AbortController();
 
-		void (async function () {
+		(async function () {
 			const api = new TheatreAPI(DB_API, abort.signal);
 			let leastGreatest = false;
 			let sort;
@@ -76,43 +82,41 @@ export default function Category(props) {
 					sort = 'name';
 					break;
 				default:
-					return set_settings({
+					return setSettings({
 						...settings,
 						sort: 'Most Popular',
 					});
 			}
 
 			try {
-				error_cause.current = 'Unable to fetch the category data.';
+				errorCause.current = 'Unable to fetch the category data.';
 
 				const data = await api.category({
-					category: props.category,
+					category,
 					sort,
 					leastGreatest,
 					offset: page * LIMIT,
 					limit: LIMIT,
 				});
 
-				error_cause.current = undefined;
-				set_data(data);
-				set_last_total(data.total);
+				errorCause.current = undefined;
+				setData(data);
+				setLastTotal(data.total);
 			} catch (error) {
-				if (isAbortError(error)) {
-					set_error(error);
-				}
+				if (isAbortError(error)) setError(error);
 			}
 		})();
 
 		return () => abort.abort();
-	}, [page, props.category, set_settings, settings, settings.sort]);
+	}, [page, category, setSettings, settings, settings.sort]);
 
-	if (error) {
+	if (error)
 		return (
 			<main className="error">
 				<span>
 					An error occured when loading the category:
 					<br />
-					<pre>{error_cause.current || error.toString()}</pre>
+					<pre>{errorCause.current || error.toString()}</pre>
 				</span>
 				<p>
 					Try again by clicking{' '}
@@ -147,27 +151,30 @@ export default function Category(props) {
 				</p>
 			</main>
 		);
-	}
 
 	return (
 		<main className={clsx('theatre-category')}>
-			<SearchBar category={props.category} placeholder={props.placeholder} />
+			<SearchBar
+				showCategory={showCategory}
+				category={category}
+				placeholder={placeholder}
+			/>
 			<section>
 				<div className="name">
 					<h1>
-						<Obfuscated ellipsis>{props.name}</Obfuscated>
+						<Obfuscated ellipsis>{name}</Obfuscated>
 					</h1>
 					<ThemeSelect
 						className="sort"
 						defaultValue={settings.sort}
 						style={{ width: 160, flex: 'none' }}
 						onChange={(event) => {
-							set_data(create_loading(last_total));
-							set_settings({
+							setData(createLoading(lastTotal));
+							setSettings({
 								...settings,
 								sort: event.target.value,
 							});
-							set_search({
+							setSearch({
 								...Object.fromEntries(search),
 								page: 0,
 							});
@@ -181,12 +188,12 @@ export default function Category(props) {
 				</div>
 				<ItemList className="items" items={data.entries} />
 			</section>
-			<div className={clsx('pages', max_page === 0 && 'useless')}>
+			<div className={clsx('pages', maxPage === 0 && 'useless')}>
 				<ChevronLeft
 					className={clsx('button', !page && 'disabled')}
 					onClick={() => {
 						if (!data.loading && page) {
-							set_search({
+							setSearch({
 								...Object.fromEntries(search),
 								page: Math.max(page - 1, 0),
 							});
@@ -194,10 +201,10 @@ export default function Category(props) {
 					}}
 				/>
 				<ChevronRight
-					className={clsx('button', page >= max_page && 'disabled')}
+					className={clsx('button', page >= maxPage && 'disabled')}
 					onClick={() => {
-						if (!data.loading && page < max_page) {
-							set_search({
+						if (!data.loading && page < maxPage) {
+							setSearch({
 								...Object.fromEntries(search),
 								page: page + 1,
 							});

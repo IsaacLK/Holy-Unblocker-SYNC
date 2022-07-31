@@ -1,14 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 export default class Settings {
-	/**
-	 *
-	 * @param {string} key
-	 * @param {object.<string, Serializable>} default_settings
-	 */
-	constructor(key, default_settings) {
+	constructor(key, defaultSettings) {
 		this.key = key;
-		this.default_settings = default_settings;
+		this.defaultSettings = defaultSettings;
 		this.load();
 	}
 	load() {
@@ -29,11 +24,11 @@ export default class Settings {
 
 		let updated = false;
 
-		for (const key in this.default_settings) {
-			if (this.valid_value(key, parsed[key])) {
+		for (const key in this.defaultSettings) {
+			if (this.validValue(key, parsed[key])) {
 				settings[key] = parsed[key];
 			} else {
-				settings[key] = this.default_settings[key];
+				settings[key] = this.defaultSettings[key];
 				updated = true;
 			}
 		}
@@ -44,55 +39,46 @@ export default class Settings {
 			localStorage[this.key] = JSON.stringify(this.value);
 		}
 	}
-	valid_value(key, value) {
-		return typeof value === typeof this.default_settings[key];
+	validValue(key, value) {
+		return typeof value === typeof this.defaultSettings[key];
 	}
 	get(key) {
 		return this.value[key];
 	}
-	set_object(object) {
+	setObject(object) {
 		let updated = false;
 
 		for (const key in object) {
-			if (this.valid_value(key, object[key])) {
+			if (this.validValue(key, object[key])) {
 				this.value[key] = object[key];
 				updated = true;
 			}
 		}
 
-		if (updated) {
-			localStorage[this.key] = JSON.stringify(this.value);
-		}
+		if (updated) localStorage[this.key] = JSON.stringify(this.value);
 
 		return updated;
 	}
 	set(key, value) {
-		if (typeof key === 'object') {
-			this.set_object(key);
-			return;
-		}
+		if (typeof key === 'object') return this.setObject(key);
 
-		if (this.valid_value(key, value)) {
-			this.value[key] = value;
-			localStorage[this.key] = JSON.stringify(this.value);
-			return true;
-		} else {
-			return false;
-		}
+		if (!this.validValue(key, value)) return false;
+
+		this.value[key] = value;
+		localStorage[this.key] = JSON.stringify(this.value);
+		return true;
 	}
 }
 
 export function useSettings(key, create) {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const settings = useMemo(() => new Settings(key, create()), []);
-	const [current, set_current] = useState({ ...settings.value });
-	const old_current = useRef(current);
+	const [current, setCurrent] = useState({ ...settings.value });
+	const oldCurrent = useRef(current);
 
 	useEffect(() => {
-		if (old_current.current !== current) {
-			settings.set(current);
-		}
+		if (oldCurrent.current !== current) settings.set(current);
 	}, [settings, current]);
 
-	return [current, set_current];
+	return [current, setCurrent];
 }

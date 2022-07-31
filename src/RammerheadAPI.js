@@ -30,15 +30,13 @@ export class RammerheadAPI {
 			throw new Error('Cannot communicate with the server');
 		}
 	}
-	async needpassword() {
-		const value = await this.get('needpassword');
-
-		return value === 'true';
+	async needPassword() {
+		return (await this.get('needpassword')) === 'true';
 	}
-	async newsession() {
+	async newSession() {
 		return await this.get('newsession');
 	}
-	async editsession(id, httpProxy, enableShuffling) {
+	async editSession(id, httpProxy, enableShuffling) {
 		const res = await this.get(
 			'editsession?id=' +
 				encodeURIComponent(id) +
@@ -51,7 +49,7 @@ export class RammerheadAPI {
 			throw new Error(`unexpected response from server. received ${res}`);
 		}
 	}
-	async sessionexists(id) {
+	async sessionExists(id) {
 		const res = await this.get('sessionexists?id=' + encodeURIComponent(id));
 
 		switch (res) {
@@ -63,8 +61,8 @@ export class RammerheadAPI {
 				throw new Error(`unexpected response from server. received ${res}`);
 		}
 	}
-	async deletesession(id) {
-		if (await this.sessionexists(id)) {
+	async deleteSession(id) {
+		if (await this.sessionExists(id)) {
 			const res = await this.get('deletesession?id=' + id);
 
 			if (res !== 'Success' && res !== 'not found') {
@@ -88,9 +86,9 @@ export class StrShuffler {
 	generateDictionary() {
 		let str = '';
 		const split = this.baseDictionary.split('');
-		while (split.length > 0) {
+		while (split.length > 0)
 			str += split.splice(Math.floor(Math.random() * split.length), 1)[0];
-		}
+
 		return str;
 	}
 	constructor(dictionary = this.generateDictionary()) {
@@ -98,9 +96,7 @@ export class StrShuffler {
 	}
 	shuffle(str) {
 		str = str.toString();
-		if (str.startsWith(this.shuffledIndicator)) {
-			return str;
-		}
+		if (str.startsWith(this.shuffledIndicator)) return str;
 		let shuffledStr = '';
 		for (let i = 0; i < str.length; i++) {
 			const char = str.charAt(i);
@@ -109,20 +105,16 @@ export class StrShuffler {
 				shuffledStr += char;
 				shuffledStr += str.charAt(++i);
 				shuffledStr += str.charAt(++i);
-			} else if (idx === -1) {
-				shuffledStr += char;
-			} else {
+			} else if (idx === -1) shuffledStr += char;
+			else
 				shuffledStr += this.dictionary.charAt(
 					this.mod(idx + i, this.baseDictionary.length)
 				);
-			}
 		}
 		return this.shuffledIndicator + shuffledStr;
 	}
 	unshuffle(str) {
-		if (!str.startsWith(this.shuffledIndicator)) {
-			return str;
-		}
+		if (!str.startsWith(this.shuffledIndicator)) return str;
 
 		str = str.slice(this.shuffledIndicator.length);
 
@@ -134,13 +126,11 @@ export class StrShuffler {
 				unshuffledStr += char;
 				unshuffledStr += str.charAt(++i);
 				unshuffledStr += str.charAt(++i);
-			} else if (idx === -1) {
-				unshuffledStr += char;
-			} else {
+			} else if (idx === -1) unshuffledStr += char;
+			else
 				unshuffledStr += this.baseDictionary.charAt(
 					this.mod(idx - i, this.baseDictionary.length)
 				);
-			}
 		}
 		return unshuffledStr;
 	}

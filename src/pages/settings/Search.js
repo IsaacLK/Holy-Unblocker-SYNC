@@ -11,7 +11,7 @@ export default function Search(props) {
 				</span>
 				<ThemeSelect
 					onChange={(event) =>
-						props.layout.current.set_settings({
+						props.layout.current.setSettings({
 							...props.layout.current.settings,
 							proxy: event.target.value,
 						})
@@ -30,7 +30,7 @@ export default function Search(props) {
 				</span>
 				<ThemeSelect
 					onChange={(event) =>
-						props.layout.current.set_settings({
+						props.layout.current.setSettings({
 							...props.layout.current.settings,
 							search: event.target.value,
 						})

@@ -26,29 +26,29 @@ import { useEffect, useRef } from 'react';
  * @property {UVDecode} decodeUrl
  */
 export default function Ultraviolet(props) {
-	const uv_bundle = useRef();
+	const uvBundle = useRef();
 
 	useEffect(() => {
-		void (async function () {
-			let error_cause;
+		(async function () {
+			let errorCause;
 
 			try {
 				if (
 					process.env.NODE_ENV !== 'development' &&
 					global.location.protocol !== 'https:'
 				) {
-					error_cause = 'Stomp must be used under HTTPS.';
-					throw new Error(error_cause);
+					errorCause = 'Stomp must be used under HTTPS.';
+					throw new Error(errorCause);
 				}
 
 				if (!('serviceWorker' in navigator)) {
-					error_cause = "Your browser doesn't support service workers.";
-					throw new Error(error_cause);
+					errorCause = "Your browser doesn't support service workers.";
+					throw new Error(errorCause);
 				}
 
-				error_cause = 'Failure loading the Ultraviolet bundle.';
-				await uv_bundle.current.promise;
-				error_cause = undefined;
+				errorCause = 'Failure loading the Ultraviolet bundle.';
+				await uvBundle.current.promise;
+				errorCause = undefined;
 
 				/**
 				 * @type {UVConfig}
@@ -56,37 +56,37 @@ export default function Ultraviolet(props) {
 				const config = global.__uv$config;
 
 				// register sw
-				error_cause = 'Failure registering the Ultraviolet Service Worker.';
+				errorCause = 'Failure registering the Ultraviolet Service Worker.';
 				await navigator.serviceWorker.register('/uv/sw.js', {
 					scope: config.prefix,
 					updateViaCache: 'none',
 				});
-				error_cause = undefined;
+				errorCause = undefined;
 
-				error_cause = 'Bare server is unreachable.';
+				errorCause = 'Bare server is unreachable.';
 				{
 					const bare = await fetch(BARE_API);
 					if (!bare.ok) {
 						throw await bare.json();
 					}
 				}
-				error_cause = undefined;
+				errorCause = undefined;
 
 				global.location.replace(
 					new URL(
-						config.encodeUrl(props.compat_layout.current.destination),
+						config.encodeUrl(props.compatLayout.current.destination),
 						new URL(config.prefix, global.location)
 					)
 				);
 			} catch (error) {
-				props.compat_layout.current.report(error, error_cause, 'Ultraviolet');
+				props.compatLayout.current.report(error, errorCause, 'Ultraviolet');
 			}
 		})();
-	}, [props.compat_layout]);
+	}, [props.compatLayout]);
 
 	return (
 		<main className="compat">
-			<ScriptsOrder ref={uv_bundle}>
+			<ScriptsOrder ref={uvBundle}>
 				<Script src="/uv/uv.bundle.js" />
 				<Script src="/uv/uv.config.js" />
 			</ScriptsOrder>

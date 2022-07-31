@@ -30,36 +30,36 @@ function ScrollManager() {
 	const _scrolls = useRef(new Map());
 	const { current: scrolls } = _scrolls;
 
-	// last_page === undefined on refresh
-	const last_page = useRef();
+	// lastPage === undefined on refresh
+	const lastPage = useRef();
 
-	if (last_page.current !== location.pathname) {
-		if (last_page.current) {
-			scrolls.set(last_page.current, new Scroll());
+	if (lastPage.current !== location.pathname) {
+		if (lastPage.current) {
+			scrolls.set(lastPage.current, new Scroll());
 		}
 
 		if (scrolls.has(location.pathname)) {
 			scrolls.get(location.pathname).scroll();
 		}
 
-		last_page.current = location.pathname;
+		lastPage.current = location.pathname;
 	}
 
 	return <></>;
 }
 
 function TabMode() {
-	const [tab, set_tab] = useState(false);
+	const [tab, setTab] = useState(false);
 
 	useEffect(() => {
 		function keydown(event) {
 			if (event.code === 'Tab') {
-				set_tab(true);
+				setTab(true);
 			}
 		}
 
 		function mousedown() {
-			set_tab(false);
+			setTab(false);
 		}
 
 		document.documentElement.dataset.tab = Number(tab);
@@ -79,15 +79,13 @@ function TabMode() {
 export default forwardRef(function Layout(props, ref) {
 	const notifications = useRef();
 
-	const theme = useMemo(() => {
-		const { matches: prefers_light } = matchMedia(
-			'(prefers-color-scheme: light)'
-		);
+	const theme = useMemo(
+		() =>
+			matchMedia('(prefers-color-scheme: light)').matches ? 'day' : 'night',
+		[]
+	);
 
-		return prefers_light ? 'day' : 'night';
-	}, []);
-
-	const [settings, set_settings] = useSettings('global settings', () => ({
+	const [settings, setSettings] = useSettings('global settings', () => ({
 		theme,
 		proxy: 'automatic',
 		search: 'https://www.google.com/search?q=%s',
@@ -95,23 +93,19 @@ export default forwardRef(function Layout(props, ref) {
 		seen_games: [],
 	}));
 
-	const [cloak, set_cloak] = useSettings('cloak settings', () => ({
+	const [cloak, setCloak] = useSettings('cloak settings', () => ({
 		value: '',
 		title: '',
 		icon: '',
 	}));
 
-	useImperativeHandle(
-		ref,
-		() => ({
-			notifications,
-			settings,
-			set_settings,
-			cloak,
-			set_cloak,
-		})
-		// [settings, set_settings, cloak, set_cloak]
-	);
+	useImperativeHandle(ref, () => ({
+		notifications,
+		settings,
+		setSettings,
+		cloak,
+		setCloak,
+	}));
 
 	useEffect(() => {
 		document.documentElement.dataset.theme = settings.theme;

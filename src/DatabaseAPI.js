@@ -13,7 +13,7 @@ export default class DatabaseAPI {
 	 * @param {object} params
 	 * @returns {object}
 	 */
-	sort_params(params) {
+	sortParams(params) {
 		const result = {};
 
 		for (const param in params) {

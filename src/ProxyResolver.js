@@ -9,7 +9,7 @@ import resolveRoute from './resolveRoute.js';
  * @param {string} setting
  * @returns {string}
  */
-export default async function resolve_proxy(src, setting) {
+export default async function resolveProxy(src, setting) {
 	if (setting === 'automatic') {
 		const { host } = new URL(src);
 		const api = new CompatAPI(DB_API);

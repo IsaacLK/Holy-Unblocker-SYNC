@@ -5,6 +5,7 @@ import { DB_API } from '../../consts.js';
 import isAbortError from '../../isAbortError.js';
 import { Obfuscated } from '../../obfuscate.js';
 import resolveRoute from '../../resolveRoute.js';
+import categories from './games/categories';
 import { Search } from '@mui/icons-material';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
@@ -12,36 +13,36 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const LIMIT = 8;
 
-export default function SearchBar(props) {
+export default function SearchBar({ category, placeholder, showCategory }) {
 	const navigate = useNavigate();
 	const input = useRef();
-	const [category_data, set_category_data] = useState({
+	const [categoryData, setCategoryData] = useState({
 		total: 0,
 		entries: [],
 	});
-	const [last_select, set_last_select] = useState(-1);
-	const [input_focused, set_input_focused] = useState(false);
-	const search_abort = useRef();
+	const [lastSelect, setLastSelect] = useState(-1);
+	const [inputFocused, setInputFocused] = useState(false);
+	const searchAbort = useRef();
 	const bar = useRef();
 
 	async function search(query) {
-		if (search_abort.current !== undefined) {
-			search_abort.current.abort();
+		if (searchAbort.current !== undefined) {
+			searchAbort.current.abort();
 		}
 
-		search_abort.current = new AbortController();
+		searchAbort.current = new AbortController();
 
-		const api = new TheatreAPI(DB_API, search_abort.current.signal);
+		const api = new TheatreAPI(DB_API, searchAbort.current.signal);
 
 		try {
-			const category_data = await api.category({
+			const categoryData = await api.category({
 				sort: 'search',
 				search: query,
 				limit: LIMIT,
-				category: props.category,
+				category: category,
 			});
 
-			set_category_data(category_data);
+			setCategoryData(categoryData);
 		} catch (error) {
 			if (!isAbortError(error)) {
 				console.error(error);
@@ -49,47 +50,17 @@ export default function SearchBar(props) {
 		}
 	}
 
-	const render_suggested = input_focused && category_data.entries.length !== 0;
-	const suggested_list = [];
-
-	if (render_suggested) {
-		for (let i = 0; i < category_data.entries.length; i++) {
-			const entry = category_data.entries[i];
-			let category_name;
-
-			const classes = ['option'];
-
-			if (i === last_select) {
-				classes.push('hover');
-			}
-
-			suggested_list.push(
-				<Link
-					tabIndex={0}
-					key={entry.id}
-					onClick={() => set_input_focused(false)}
-					onMouseOver={() => set_last_select(i)}
-					to={`${resolveRoute('/theatre/', 'player')}?id=${entry.id}`}
-					className={clsx('option', i === last_select && 'hover')}
-				>
-					<div className="name">
-						<Obfuscated ellipsis>{entry.name}</Obfuscated>
-					</div>
-					<div className="category">{category_name}</div>
-				</Link>
-			);
-		}
-	}
+	const renderSuggested = inputFocused && categoryData.entries.length !== 0;
 
 	return (
 		<div
 			className="theatre-search-bar"
-			data-focused={Number(input_focused)}
-			data-suggested={Number(render_suggested)}
+			data-focused={Number(inputFocused)}
+			data-suggested={Number(renderSuggested)}
 			ref={bar}
 			onBlur={(event) => {
 				if (!bar.current.contains(event.relatedTarget)) {
-					set_input_focused(false);
+					setInputFocused(false);
 				}
 			}}
 		>
@@ -99,59 +70,59 @@ export default function SearchBar(props) {
 					ref={input}
 					type="text"
 					className="thin-pad-left"
-					placeholder={props.placeholder}
+					placeholder={placeholder}
 					onFocus={(event) => {
-						set_input_focused(true);
-						set_last_select(-1);
+						setInputFocused(true);
+						setLastSelect(-1);
 						search(event.target.value);
 					}}
 					onClick={(event) => {
-						set_input_focused(true);
-						set_last_select(-1);
+						setInputFocused(true);
+						setLastSelect(-1);
 						search(event.target.value);
 					}}
 					onKeyDown={(event) => {
-						let prevent_default = true;
+						let preventDefault = true;
 
 						switch (event.code) {
 							case 'Escape':
-								set_input_focused(false);
+								setInputFocused(false);
 								break;
 							case 'ArrowDown':
 							case 'ArrowUp':
 								{
-									const last_i = last_select;
+									const lastI = lastSelect;
 
 									let next;
 
 									switch (event.code) {
 										case 'ArrowDown':
-											if (last_i >= category_data.length - 1) {
+											if (lastI >= categoryData.length - 1) {
 												next = 0;
 											} else {
-												next = last_i + 1;
+												next = lastI + 1;
 											}
 											break;
 										case 'ArrowUp':
-											if (last_i <= 0) {
-												next = category_data.length - 1;
+											if (lastI <= 0) {
+												next = categoryData.length - 1;
 											} else {
-												next = last_i - 1;
+												next = lastI - 1;
 											}
 											break;
 										// no default
 									}
 
-									set_last_select(next);
+									setLastSelect(next);
 								}
 								break;
 							case 'Enter':
 								{
-									const entry = category_data.entries[last_select];
+									const entry = categoryData.entries[lastSelect];
 
 									if (entry) {
 										input.current.blur();
-										set_input_focused(false);
+										setInputFocused(false);
 										navigate(
 											`${resolveRoute('/theatre/', 'player')}?id=${entry.id}`
 										);
@@ -159,28 +130,51 @@ export default function SearchBar(props) {
 								}
 								break;
 							default:
-								prevent_default = false;
+								preventDefault = false;
 								break;
 							// no default
 						}
 
-						if (prevent_default) {
+						if (preventDefault) {
 							event.preventDefault();
 						}
 					}}
 					onChange={(event) => {
 						search(event.target.value);
-						set_last_select(-1);
+						setLastSelect(-1);
 					}}
 				></input>
 			</ThemeInputBar>
 			<div
 				className="suggested"
 				onMouseLeave={() => {
-					set_last_select(-1);
+					setLastSelect(-1);
 				}}
 			>
-				{suggested_list}
+				{renderSuggested &&
+					categoryData.entries.map((entry, i) => (
+						<Link
+							tabIndex={0}
+							key={entry.id}
+							onClick={() => setInputFocused(false)}
+							onMouseOver={() => setLastSelect(i)}
+							to={`${resolveRoute('/theatre/', 'player')}?id=${entry.id}`}
+							className={clsx('option', i === lastSelect && 'hover')}
+						>
+							<div className="name">
+								<Obfuscated ellipsis>{entry.name}</Obfuscated>
+							</div>
+							{showCategory && entry.category[0] && (
+								<div className="category">
+									{
+										categories.find(
+											(category) => category.id === entry.category[0]
+										)?.name
+									}
+								</div>
+							)}
+						</Link>
+					))}
 			</div>
 		</div>
 	);

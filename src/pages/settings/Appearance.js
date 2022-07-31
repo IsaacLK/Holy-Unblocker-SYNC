@@ -8,7 +8,7 @@ export default function Appearance(props) {
 				<ThemeSelect
 					defaultValue={props.layout.current.settings.theme}
 					onChange={(event) => {
-						props.layout.current.set_settings({
+						props.layout.current.setSettings({
 							...props.layout.current.settings,
 							theme: event.target.value,
 						});
