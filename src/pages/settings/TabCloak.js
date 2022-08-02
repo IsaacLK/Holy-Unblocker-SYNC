@@ -14,9 +14,7 @@ const bare = new BareClient(BARE_API);
  * @returns {{title:string,icon:string,url:string}}
  */
 async function extractData(url) {
-	const response = await bare.fetch(url, {
-		redirect: 'follow',
-	});
+	const response = await bare.fetch(url, { redirect: 'follow' });
 
 	if (!response.ok) {
 		throw new Error(`Response was not OK. Got ${response.status}`);
@@ -59,7 +57,7 @@ async function extractData(url) {
 			title = selector.textContent;
 		} else {
 			const url = response.finalURL;
-			title = `${url.host}${url.pathname}${url.search}${url.query}`;
+			title = `${url.host}${url.pathname}${url.search}`;
 		}
 	}
 
